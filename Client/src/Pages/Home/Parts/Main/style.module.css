@@ -1,0 +1,14 @@
+.HomeContainer{
+    display: flex;
+    justify-content: space-between;
+        @media screen and (max-width:1020px) {
+            flex-direction: column-reverse;
+        }
+    }
+    .Left{
+        Button{
+        @media screen and (max-width:1020px) {
+            width: 100%;
+        }
+    }
+    }
