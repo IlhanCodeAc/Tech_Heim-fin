@@ -1,0 +1,29 @@
+.CatsContainer{
+    display: flex;
+    margin-top: 56px;
+    gap: 24px;
+    justify-content: center;
+    @media screen and (max-width:766px){
+        display: none;
+    }
+    .Category{
+        padding: 8px 18px;
+        align-items: flex-start;
+        gap: 10px;
+        border-radius: 8px;
+        background: var(--White, #FFF);
+        
+        /* shadow 1 */
+        box-shadow: -2px 2px 15px -1px rgba(113, 113, 113, 0.12);
+        p{
+            color: var(--Neutral-Gray-2D2D2D, #2D2D2D);
+            text-align: center;
+            
+            /* Web/Body-md */
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px; /* 150% */
+        }
+    }
+}
