@@ -1,0 +1,36 @@
+.WatchCont{
+    margin-top: 40px;
+    border-radius: 8px;
+    background: #223949;
+    height: 420px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 60px;
+    @media screen and (max-width:767px) {
+        display: none;
+    }
+    .Left{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 128px;
+        h1{
+            margin-bottom: 16px;
+        }
+        p{
+            margin-bottom: 32px;
+        }
+        button:hover{
+            background-color: transparent;
+            color:#FF6951;
+            border: 1px solid #FF6951;
+        }
+        button{
+            border: 1px solid #FF6951;
+            transition: 0.3s;
+        }
+    }
+    .Right{
+        margin-top: 60px;
+    }
+}
