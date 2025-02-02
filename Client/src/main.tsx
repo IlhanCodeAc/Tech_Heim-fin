@@ -4,7 +4,5 @@ import App from './App.tsx'
 import { SidebarProvider } from './Components/components/ui/sidebar.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <SidebarProvider>
     <App />
-  </SidebarProvider>
 )

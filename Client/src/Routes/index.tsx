@@ -1,5 +1,6 @@
 import MainLayout from '../Components/MainLayout';
 import Home from '../Pages/Home';
+import Productspage from '../Pages/Products';
 export const ROUTES =[
     {
     element: <MainLayout/>,
@@ -9,10 +10,10 @@ export const ROUTES =[
             index:true,
             element:<Home/>
         },
-        // {
-        //     path:'*',
-        //     element: <Notfound/>
-        // },
+        {
+            path:'/products',
+            element: <Productspage/>
+        },
         
         // {
         //     path:'Login',

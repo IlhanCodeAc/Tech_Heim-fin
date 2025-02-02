@@ -1,0 +1,17 @@
+.Topcats{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    margin-bottom: 80px;
+}
+.Topcat{
+    transition: 0.3s;
+    border-radius: 4px;
+}
+.Topcat.active {
+    border-bottom: 3px solid #0C68F4;
+  }
+.Topcat:hover{
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+  

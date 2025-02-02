@@ -1,24 +1,105 @@
-.Footer{
+.Footer {
     background: var(--Primary-Primary-900, #021736);
-    height: 293px;
     width: 100%;
-    .FooterContainer{
-        display: flex;
-        justify-content: space-around;
-        border-bottom: 2px solid #CBCBCB;
-        @media screen and (max-width:767px) {
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
-            h3{
-                display: flex;
-                justify-content: flex-start;
-            }
-        }
+    padding: 40px 0;
+    bottom:0;
+    
+}
+
+.FooterContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-bottom: 2px solid #CBCBCB;
+    padding-bottom: 20px;
+}
+
+.Left, .Mid, .Right {
+    flex: 1;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+h3 {
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+p {
+    color: #CBCBCB;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    transition: color 0.3s ease-in-out;
+}
+
+p:hover {
+    color: var(--Primary-Primary-500, #FF6F61);
+}
+
+.Logos {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.icon:hover {
+    transform: scale(1.15);
+    opacity: 0.8;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
-.Logos{
-    display: flex;
-    gap: 5px;
+
+.FooterContainer {
+    animation: slideUp 1s ease-out;
+}
+
+@media screen and (max-width: 767px) {
+    .Footer {
+        padding: 20px 0;
+    }
+
+    .FooterContainer {
+        gap: 30px;
+    }
+
+    .icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 14px;
+    }
 }

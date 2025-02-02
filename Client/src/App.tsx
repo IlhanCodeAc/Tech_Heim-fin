@@ -1,14 +1,16 @@
-import { createBrowserRouter , RouterProvider } from 'react-router-dom'
-import { ROUTES } from './Routes';
-const routes =createBrowserRouter(ROUTES);
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ROUTES } from './Routes'; // Your routes file
+import { SidebarProvider } from './Components/components/ui/sidebar'; // Sidebar context
+import { Sidebar } from './Components/components/ui/sidebar'; // Existing Sidebar component
 
+const routes = createBrowserRouter(ROUTES);
 
 const App = () => {
   return (
-    <>
-   <RouterProvider router={routes}></RouterProvider>
-    </>
-  )
-}
+      <div >
+          <RouterProvider router={routes} />
+      </div>
+  );
+};
 
-export default App
+export default App;

@@ -5,6 +5,9 @@ import SearchLogo from "../../../assets/SVGs/search-normal.svg"
 import BasketLogo from "../../../assets/SVGs/bag.svg"
 import ProfileLogo from "../../../assets/SVGs/user.svg"
 import Burger from "../../../assets/SVGs/burger-menu-svgrepo-com.svg"
+import { SidebarTrigger } from '../../components/ui/sidebar'
+import { Sidebar } from '../Sidebar'
+import { Link } from 'react-router-dom'
 
 const Navbar = () => {
   return (
@@ -12,14 +15,14 @@ const Navbar = () => {
         <div className={style.NavContainer}>
             <div className={style.Left}>
              <div className={style.Logo}> <img src={Logo} alt="" /></div>
-              <div className={style.Burger}><img src={Burger} alt="" /></div>
+              <div className={style.Burger}><Sidebar/></div>
 
             </div>
             <div className={style.Middle}>
           
              <div  className={style.NameText}> <img src={Logo} alt="" /></div>
             <li>Home</li>
-            <li>Products</li>
+            <li><Link to="/products">Products</Link></li>
             <li>Blog</li>
             <li>FAQ</li>
             <li>Contact Us</li>
