@@ -1,0 +1,278 @@
+.Left {
+    width: 600px;
+
+    .TopImg {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 20px;
+    }
+
+    .TopImg img {
+        width: 450px;
+        height: 300px;
+        object-fit: contain;
+        @media screen and (max-width: 767px) {
+            /* No changes here */
+        }
+    }
+
+    .BotImgs {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+
+        img {
+            height: 100px;
+            object-fit: contain;
+            @media screen and (max-width: 767px) {
+                /* No changes here */
+            }
+        }
+    }
+}
+
+.DetTopCont {
+    display: flex;
+
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.MidTop p {
+    color: #000;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.MidMid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+
+    p {
+        color: var(--Neutral-Gray-717171, #717171);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+
+    .MidVarr {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .MidDeli {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+}
+
+.MidDetai {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-top: 32px;
+
+    h3 {
+        color: var(--Black, #0C0C0C);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+
+    p {
+        color: var(--Neutral-Gray-717171, #717171);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .Left {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .MidMid {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .MidDetai {
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .MidTop p {
+        font-size: 16px;
+    }
+
+    .MidMid p {
+        font-size: 10px;
+    }
+}
+.DetPrice{
+    display: flex;
+    width: 420px;
+    height: 250px;
+    padding: 24px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    border-radius: 8px;
+    background: #FFF;
+    @media screen and (max-width:767px) {
+    margin-top: 20px;
+    width: 310px;
+        
+    }
+    
+    /* shadow 1 */
+    box-shadow: -2px 2px 15px -1px rgba(113, 113, 113, 0.12);
+    h3{
+        color: var(--Black, #0C0C0C);
+
+        /* Web/H5 */
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .Buy{
+        display: flex;
+        height: 48px;
+        padding: 8px 16px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        align-self: stretch;
+        border-radius: 8px;
+        color: var(--White, #FFF);
+        text-align: center;
+        
+        /* Web/Button-lg */
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        background: var(--Primary, #0C68F4);
+    }
+    .ToCart{
+        color: var(--Primary, #0C68F4);
+        text-align: center;
+        
+        /* Web/Button-lg */
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        display: flex;
+        height: 48px;
+        padding: 8px 16px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        align-self: stretch;
+        border-radius: 8px;
+        border: 2px solid var(--Primary, #0C68F4);
+    }
+}
+.DetailTop{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    p{
+        color: var(--Black, #0C0C0C);
+        
+        /* Web/H5 */
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        width: 100%;
+    }
+}
+.DetGray{
+    display: flex;
+    width: 100%;
+    padding: 14px 12px 14px 12px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 8px 8px 8px 8px;
+    width: 540px;
+
+    background: var(--Neutral-Gray-F9F9F9, #F9F9F9);
+    justify-content: space-between;
+    p{
+        color: var(--Neutral-Gray-717171, #717171);
+
+        /* Web/H6 */
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    h3{
+        color: var(--Neutral-Gray-2D2D2D, #2D2D2D);
+
+        /* Web/Body-md */
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 24px; /* 150% */
+    }
+}
+.DetWhite{
+    display: flex;
+    padding: 14px 12px 14px 12px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 8px 8px 8px 8px;
+    justify-content: space-between;
+    width: 540px;
+    p{
+        color: var(--Neutral-Gray-717171, #717171);
+
+        /* Web/H6 */
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    h3{
+        color: var(--Neutral-Gray-2D2D2D, #2D2D2D);
+
+        /* Web/Body-md */
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 24px; /* 150% */
+
+    }
+}
+.DetMain{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 80px;
+    @media screen and (max-width:767px) {
+        flex-direction: column;
+    }
+}

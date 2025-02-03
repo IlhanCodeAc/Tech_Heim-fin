@@ -1,4 +1,5 @@
 import MainLayout from '../Components/MainLayout';
+import Detailpage from '../Pages/Detail';
 import Home from '../Pages/Home';
 import Productspage from '../Pages/Products';
 export const ROUTES =[
@@ -11,14 +12,14 @@ export const ROUTES =[
             element:<Home/>
         },
         {
-            path:'/products',
+            path:'products',
             element: <Productspage/>
         },
         
-        // {
-        //     path:'Login',
-        //     element:<Login/>
-        // },
+        {
+            path:'products/detail',
+            element:<Detailpage/>
+        },
         // {
         //     path:'register',
         //     element:<Register/>
