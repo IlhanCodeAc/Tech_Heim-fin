@@ -2,8 +2,7 @@
     background: var(--Primary-Primary-900, #021736);
     width: 100%;
     padding: 40px 0;
-    bottom:0;
-    
+    bottom: 0;
 }
 
 .FooterContainer {
@@ -25,7 +24,7 @@
     gap: 15px;
 }
 
-h3 {
+.Footer h3 {
     color: white;
     font-family: 'Inter', sans-serif;
     font-size: 18px;
@@ -33,7 +32,7 @@ h3 {
     letter-spacing: 1px;
 }
 
-p {
+.Footer p {
     color: #CBCBCB;
     font-family: 'Inter', sans-serif;
     font-size: 16px;
@@ -42,7 +41,7 @@ p {
     transition: color 0.3s ease-in-out;
 }
 
-p:hover {
+.Footer p:hover {
     color: var(--Primary-Primary-500, #FF6F61);
 }
 
@@ -90,16 +89,16 @@ p:hover {
         gap: 30px;
     }
 
-    .icon {
+    .Footer .icon {
         width: 30px;
         height: 30px;
     }
 
-    h3 {
+    .Footer h3 {
         font-size: 16px;
     }
 
-    p {
+    .Footer p {
         font-size: 14px;
     }
 }
