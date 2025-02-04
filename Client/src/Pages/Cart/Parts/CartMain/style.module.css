@@ -1,0 +1,128 @@
+.CartCards{
+    margin-top: 80px;
+    /* margin-bottom: 180px; */
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    .CartCard{
+        display: flex;
+        padding: 8px 16px;
+        align-items: center;
+        gap: 24px;
+        border-radius: 8px;
+        background: var(--White, #FFF);
+        width: 100%;
+        
+        /* shadow 1 */
+        box-shadow: -2px 2px 15px -1px rgba(113, 113, 113, 0.12);
+        .CardLeft{
+            img{
+                width: 250px;
+                height: 200px;
+            }
+        }
+        .CardMid{
+            .MidTop{
+                margin-bottom: 30px;
+                h3{
+                overflow: hidden;
+                color: var(--Black, #0C0C0C);
+                text-overflow: ellipsis;
+                
+                /* Web/H6 */
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                }
+            }
+            .MidMid{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                .Delivery{
+                    display: flex;
+                    gap: 5px;
+                    p{
+                        color: var(--Neutral-Gray-717171, #717171);
+
+                        /* Web/caption-sm */
+                        
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                    }
+                }
+                .Varranty{
+                    display: flex;
+                    gap: 5px;
+                    margin-bottom: 24px;
+
+                    p{
+                        color: var(--Neutral-Gray-717171, #717171);
+
+                        /* Web/caption-sm */
+                        
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                    }
+                }
+            }
+        }
+    }
+
+}
+.CartCards .CartCard .CardMid .MidBottom .BottomLeft p {
+    color: var(--Black, #0C0C0C) !important;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.BottomRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.BottomRight p {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--Black, #0C0C0C);
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--White, #FFF);
+    border-radius: 4px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.trashBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #FF4D4D;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.MidBottom{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
