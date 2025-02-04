@@ -13,6 +13,7 @@ const CartMain = () => {
 
     return (
         <div className='container'>
+            <div className={style.CartContainer}>
             <div className={style.Left}>
                 <div className={style.CartCards}>
                     <div className={style.CartCard}>
@@ -56,7 +57,28 @@ const CartMain = () => {
             </div>
             <div className={style.Right}>
                 <div className={style.CheckoutCard}>
+                    <div className={style.cardTop}>
+                        <h3>Payment Details</h3>
+                    </div>
+                    <div className={style.cardMain}>
+                            <div className={style.Subtotal}>
+                                <p>Subtotal</p>
+                                <p>900$</p>
+                            </div>
+                            <div className={style.Shipment}>
+                                <p>Shipment cost</p>
+                                <p>0$</p>
+                            </div>
+                    </div>
+                    <div className={style.cardFoot}>
+                        <div className={style.GrandTotal}>
+                        <p>Grand Total</p>
+                        <p>900$</p>
+                        </div>
+                        <button className={style.ToCheckout}>Proceed To Checkout</button>
+                    </div>
                 </div>
+            </div>
             </div>
         </div>
     )
