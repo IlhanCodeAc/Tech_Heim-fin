@@ -1,0 +1,144 @@
+.Left{
+    h3{
+        color: var(--Black, #0C0C0C);
+        margin-top: 90px;        
+        /* Web/H5 */
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        margin-bottom: 24px;
+    }
+    p{
+        color: var(--Black, #0C0C0C);
+
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+        margin-bottom: 24px;
+    }
+    input{
+        border-radius: 8px;
+        border: 1px solid var(--Neutral-Gray-9E9E9E, #9E9E9E);
+        background: var(--White, #FFF);
+        padding: 4px 24px;
+        align-items: flex-start;
+        height: 48px;
+        width: 325px;
+    }
+    input::placeholder{
+        color: var(--Neutral-Gray-9E9E9E, #9E9E9E);
+
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+    .Commenting{
+        display: flex;
+        flex-direction: column;
+        button{
+            display: flex;
+            width: 288px;
+            height: 48px;
+            padding: 8px 16px;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border-radius: 8px;
+            border: 2px solid var(--Primary, #0C68F4);
+            color: var(--Primary, #0C68F4);
+            text-align: center;
+            
+            /* Web/Button-lg */
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            transition: 0.3s;
+        }
+        button:hover{
+            background-color: #0C68F4;
+            color: white;
+        }
+    }
+}
+.Right{
+    .Comments{
+        overflow: auto;
+        display: flex;
+        width: 600px;
+        /* height: 900px; */
+        overflow: auto;
+        flex-direction: column;
+        @media screen and (max-width:767px) {
+            width: 340px;
+        }
+        .Comment{
+            padding: 16px;
+            gap: 12px;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--Neutral-Gray-EDEDED, #EDEDED);
+            background: var(--Neutral-Gray-F9F9F9, #F9F9F9);
+            .CommentTop{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                /* gap: 200%; */
+                .CommentTopLeft{
+                display: flex;
+                column-gap: 5px;
+                align-items: center;
+                }
+                .CommentTopRight{
+                    .Rating{
+                        display: flex;
+                        height: 32px;
+                        padding: 4px 8px;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 8px;
+                        background: var(--Primary-Primary-500, #063A88);
+                        
+                            color: var(--White, #FFF);
+
+                            /* Web/caption-md */
+                            font-size: 12px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            gap: 5px;                        
+                    }
+                }
+            }
+            .CommentContent{
+                margin-top: 10px;
+            p{
+                overflow: hidden;
+                color: var(--Black, #0C0C0C);
+                text-overflow: ellipsis;
+                
+                /* Web/Body-md */
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 300;
+                line-height: 24px; /* 150% */
+                
+            }
+            }
+           
+        }
+    }
+}
+.CommentContainer{
+    display: flex;
+    align-items: center;
+    gap: 20%;
+    @media screen and (max-width:767px) {
+        flex-direction: column;
+    }
+}
