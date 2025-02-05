@@ -1,0 +1,13 @@
+.User{
+    display: flex;
+    align-items: center;
+    h2{
+        color: var(--Black, #0C0C0C);
+
+        /* Web/H5 */
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+}
