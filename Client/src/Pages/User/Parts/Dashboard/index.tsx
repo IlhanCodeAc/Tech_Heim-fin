@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Menu, X, User, ShoppingBag, Package, Heart, Mail, LogOut } from "lucide-react";
 import style from "./style.module.css"; 
 import UserSVG from "../../../../assets/SVGs/user.svg";
+import UserTable from "../../DashboardPages/OrdersUse";
+import AdminTable from "../../DashboardPages/AdminOrders";
+import ProductTable from "../../DashboardPages/ProductsTable";
+import PersonalData from "../../DashboardPages/PersonalData";
+import Wishlist from "../../DashboardPages/Wishlist";
 
 interface SidebarProps {
   setSelectedPage: (page: string) => void;
@@ -84,10 +89,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
 const Content: React.FC<ContentProps> = ({ selectedPage }) => {
   return (
     <div className="p-5">
-      {selectedPage === "personal-data" && <h2>Personal Data Page</h2>}
-      {selectedPage === "orders" && <h2>Orders Page</h2>}
-      {selectedPage === "products" && <h2>Products Page</h2>}
-      {selectedPage === "wishlist" && <h2>Wish List Page</h2>}
+      {selectedPage === "personal-data" && <h2><PersonalData/></h2>}
+      {selectedPage === "orders" && <AdminTable/>}
+      {selectedPage === "products" && <h2><ProductTable/></h2>}
+      {selectedPage === "wishlist" && <h2><Wishlist/></h2>}
       {selectedPage === "contact" && <h2>Contact Us Page</h2>}
     </div>
   );
