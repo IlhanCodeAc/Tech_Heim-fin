@@ -7,7 +7,7 @@ const getAll = async (_req: Request, res: Response) => {
   const items = data.map((item) => ({
     _id: item._id,
     name: item.name,
-    count: item.rents.length,
+    count: item.products.length,
     createdAt: item.createdAt,
   }));
 

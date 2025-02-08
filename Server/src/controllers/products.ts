@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Rent from "../mongoose/schemas/rent";
+import Product from "../mongoose/schemas/products";
 import Category from "../mongoose/schemas/category";
 import Review from "../mongoose/schemas/review";
 
@@ -14,8 +14,6 @@ const getAll = async (req: Request, res: Response) => {
       capacity,
       min_price,
       max_price,
-      pickup_location,
-      dropoff_location,
     } = req.matchedData;
 
     const filter: Record<string, any> = {
@@ -52,26 +50,16 @@ const getAll = async (req: Request, res: Response) => {
       filter.$and.push({ price: { $lte: +max_price } });
     }
 
-    if (pickup_location) {
-      filter.pickUpLocation = pickup_location;
-    }
-
-    if (dropoff_location) {
-      filter.dropOffLocations = {
-        $in: [dropoff_location],
-      };
-    }
-
-    const items = await Rent.find(filter)
+    const items = await Product.find(filter)
       .skip(+skip)
       .limit(+take)
-      .populate(["category", "pickUpLocation", "dropOffLocations"]);
+      .populate(["category"]);
 
-    const total = await Rent.countDocuments(filter);
+    const total = await Product.countDocuments(filter);
 
     items.forEach((item) => {
       item.images = item.images.map(
-        (image) => `${process.env.BASE_URL}/public/rent/${image}`
+        (image) => `${process.env.BASE_URL}/public/product/${image}`
       );
     });
     res.json({
@@ -93,13 +81,9 @@ const getById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const rent = await Rent.findById(id).populate([
-      "category",
-      "pickUpLocation",
-      "dropOffLocations",
-    ]);
+    const product = await Product.findById(id).populate(["category"]);
 
-    if (!rent) {
+    if (!product) {
       res.status(404).json({
         message: "Not Found",
       });
@@ -107,18 +91,18 @@ const getById = async (req: Request, res: Response) => {
     }
 
     const reviews = await Review.find({
-      rent: id,
+      product: id,
       status: "approved",
     }).populate("author", "name surname");
 
-    rent.images = rent.images.map(
-      (image) => `${process.env.BASE_URL}/public/rent/${image}`
+    product.images = product.images.map(
+      (image) => `${process.env.BASE_URL}/public/product/${image}`
     );
 
     res.json({
       message: "success",
       item: {
-        ...rent.toObject(),
+        ...product.toObject(),
         reviews,
       },
     });
@@ -136,10 +120,9 @@ const create = async (req: Request, res: Response) => {
       name,
       description,
       categoryId,
-      pickUpLocation,
-      dropOffLocations,
-      fuel,
-      gearBox,
+      processor,
+      graphicscard,
+      brand,
       capacity,
       price,
       currency,
@@ -158,14 +141,13 @@ const create = async (req: Request, res: Response) => {
 
     const images = (req.files as any)?.map((file: any) => file.filename) || [];
 
-    const rent = new Rent({
+    const product = new Product({
       name,
       description,
       category,
-      pickUpLocation,
-      dropOffLocations,
-      fuel,
-      gearBox,
+      processor,
+      graphicscard,
+      brand,
       capacity,
       price,
       currency,
@@ -173,14 +155,14 @@ const create = async (req: Request, res: Response) => {
       images,
       showInRecommendation,
     });
-    await rent.save();
+    await product.save();
 
-    category.rents.push(rent._id);
+    category.products.push(product._id);
     await category.save();
 
     res.status(201).json({
       message: "success",
-      item: rent,
+      item: product,
     });
   } catch (err) {
     console.log(err);
@@ -193,69 +175,22 @@ const create = async (req: Request, res: Response) => {
 const edit = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const updateData = req.matchedData;
 
-    const data = {
-      ...req.matchedData,
-    };
-    const { categoryId } = data;
+    const product = await Product.findByIdAndUpdate(id, updateData, { new: true });
 
-    const category = await Category.findById(categoryId);
-
-    if (!category) {
-      res.status(404).json({
-        message: "Category Not Found",
-      });
+    if (!product) {
+      res.status(404).json({ message: "Not Found" });
       return;
     }
-
-    if (req.files && (req.files as any).length > 0) {
-      data.images = (req.files as any).map((file: any) => file.filename);
-    }
-
-    const rent = await Rent.findById(id);
-
-    if (!rent) {
-      res.status(404).json({
-        message: "Not Found",
-      });
-      return;
-    }
-
-    const oldCategoryId = rent.category;
-
-    await Category.findByIdAndUpdate(oldCategoryId, {
-      $pull: {
-        rents: id,
-      },
-    });
-    category.rents.push(rent._id);
-    await category.save();
-
-    rent.name = data.name;
-    rent.description = data.description;
-    rent.category = data.categoryId;
-    rent.pickUpLocation = data.pickUpLocation;
-    rent.dropOffLocations = data.dropOffLocations;
-    rent.fuel = data.fuel;
-    rent.gearBox = data.gearBox;
-    rent.capacity = data.capacity;
-    rent.price = data.price;
-    rent.discount = data.discount;
-    if (data.images) rent.images = data.images;
-    if (data.showInRecommendation !== undefined)
-      rent.showInRecommendation = data.showInRecommendation;
-
-    await rent.save();
 
     res.json({
       message: "success",
-      item: rent,
+      item: product,
     });
   } catch (err) {
     console.log(err);
-    res.status(500).send({
-      message: "Internal Server Error",
-    });
+    res.status(500).send({ message: "Internal Server Error" });
   }
 };
 
@@ -263,9 +198,9 @@ const remove = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const rent = await Rent.findByIdAndDelete(id);
+    const product = await Product.findByIdAndDelete(id);
 
-    if (!rent) {
+    if (!product) {
       res.status(404).json({
         message: "Not Found",
       });
@@ -274,7 +209,7 @@ const remove = async (req: Request, res: Response) => {
 
     res.json({
       message: "success",
-      item: rent,
+      item: product,
     });
   } catch (err) {
     console.log(err);
@@ -284,10 +219,12 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export default {
+const productController = {
   getAll,
   getById,
   create,
   edit,
   remove,
 };
+
+export default productController;

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Reservation from "../mongoose/schemas/reservation";
-import Rent from "../mongoose/schemas/rent";
+import Rent from "../mongoose/schemas/products";
 import { calculateDateDifference } from "../utils/date";
 import { Rent as TRent } from "../types/schema";
 

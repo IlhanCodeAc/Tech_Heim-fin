@@ -43,42 +43,6 @@ export const getAllRentSchema: Schema = {
     isNumeric: true,
     optional: true,
   },
-  pickup_location: {
-    in: ["query"],
-    notEmpty: true,
-    isString: true,
-    optional: true,
-  },
-  pickup_date: {
-    in: ["query"],
-    isString: true,
-    optional: true,
-    notEmpty: true,
-  },
-  pickup_time: {
-    in: ["query"],
-    notEmpty: true,
-    isString: true,
-    optional: true,
-  },
-  dropoff_location: {
-    in: ["query"],
-    isString: true,
-    notEmpty: true,
-    optional: true,
-  },
-  dropoff_date: {
-    in: ["query"],
-    notEmpty: true,
-    isString: true,
-    optional: true,
-  },
-  dropoff_time: {
-    in: ["query"],
-    isString: true,
-    notEmpty: true,
-    optional: true,
-  },
 };
 
 export const createRentSchema: Schema = {
@@ -99,7 +63,7 @@ export const createRentSchema: Schema = {
   },
   capacity: {
     in: ["body"],
-    isNumeric: true,
+    isString: true,
     notEmpty: true,
   },
   categoryId: {
@@ -115,16 +79,6 @@ export const createRentSchema: Schema = {
   dropOffLocations: {
     in: ["body"],
     isArray: true,
-    notEmpty: true,
-  },
-  fuel: {
-    in: ["body"],
-    isNumeric: true,
-    notEmpty: true,
-  },
-  gearBox: {
-    in: ["body"],
-    isString: true,
     notEmpty: true,
   },
   currency: {

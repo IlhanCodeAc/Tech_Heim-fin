@@ -10,7 +10,7 @@ const categorySchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  rents: [
+  products: [
     {
       type: Schema.Types.ObjectId,
       ref: "Rent",

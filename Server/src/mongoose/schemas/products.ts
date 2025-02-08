@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 const { Schema } = mongoose;
 
-const rentSchema = new Schema({
+const productSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -19,24 +19,20 @@ const rentSchema = new Schema({
     ref: "Category",
     required: true,
   },
-  pickUpLocation: {
-    type: Types.ObjectId,
-    ref: "Location",
-    required: true,
-  },
-  dropOffLocations: {
-    type: [Types.ObjectId],
-    ref: "Location",
-    required: true,
-  },
-  fuel: {
+  
+  processor: {
     type: String,
-    required: true,
+    default: "", 
   },
-  gearBox: {
+  graphicscard: {
     type: String,
-    required: true,
+    default: "",
   },
+  brand: {
+    type: String,
+    default: "",
+  },
+
   capacity: {
     type: Number,
     required: true,
@@ -68,11 +64,11 @@ const rentSchema = new Schema({
   },
 });
 
-rentSchema.set("toJSON", {
+productSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, ret) => {
     delete ret.__v;
   },
 });
 
-export default mongoose.model("Rent", rentSchema);
+export default mongoose.model("Product", productSchema);

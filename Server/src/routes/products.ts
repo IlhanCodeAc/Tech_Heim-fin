@@ -1,26 +1,27 @@
 import { Router } from "express";
-import rentController from "../controllers/rent";
+import rentController from "../controllers/products";
 import validateSchema from "../middlewares/validator";
 import {
   createRentSchema,
   editRentSchema,
   getAllRentSchema,
-} from "../validation/rent";
+} from "../validation/products";
 import { authorize } from "../middlewares/user";
 import upload from "../middlewares/multer";
+import productController from "../controllers/products";
 
 const router = Router();
 
 router.get("/", validateSchema(getAllRentSchema), rentController.getAll);
 
-router.get("/:id", rentController.getById);
+router.get("/:id", productController.getById);
 
 router.post(
   "/",
   authorize({ isAdmin: true }),
   upload.array("images", 8),
   validateSchema(createRentSchema),
-  rentController.create
+  productController.create
 );
 
 router.put(
@@ -28,9 +29,9 @@ router.put(
   authorize({ isAdmin: true }),
   upload.array("images", 8),
   validateSchema(editRentSchema),
-  rentController.edit
+  productController.edit
 );
 
-router.delete("/:id", authorize({ isAdmin: true }), rentController.remove);
+router.delete("/:id", authorize({ isAdmin: true }), productController.remove);
 
 export default router;

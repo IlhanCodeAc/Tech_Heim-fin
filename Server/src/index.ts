@@ -12,7 +12,7 @@ import reservationRoutes from "./routes/reservation";
 import locationRoutes from "./routes/location";
 import categoryRoutes from "./routes/category";
 import authRoutes from "./routes/auth";
-import rentRoutes from "./routes/rent";
+import productRoutes from "./routes/products";
 import reviewRoutes from "./routes/review";
 import conversationRoutes from "./routes/conversation";
 
@@ -22,6 +22,7 @@ import "./auth/local-strategy";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
+const uri = "mongodb+srv://ilhanma:<db_password>@techheim.kbe1z.mongodb.net/?retryWrites=true&w=majority&appName=TechHeim";
 
 const app = express();
 const server = createServer(app);
@@ -37,7 +38,7 @@ app.use(
 );
 app.use(
   session({
-    secret: process.env.SESSION_SECRET!,
+    secret: process.env.SESSION_SECRET || "default_secret", 
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -45,6 +46,7 @@ app.use(
     },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -53,7 +55,7 @@ app.use("/public", express.static(path.join(__dirname, "../public")));
 app.use("/auth", authRoutes);
 app.use("/category", categoryRoutes);
 app.use("/location", locationRoutes);
-app.use("/rent", rentRoutes);
+app.use("/product", productRoutes);
 app.use("/reservation", reservationRoutes);
 app.use("/review", reviewRoutes);
 app.use("/conversation", conversationRoutes);
@@ -64,7 +66,7 @@ server.listen(PORT, () => {
 
 async function connecToDb() {
   await mongoose.connect(
-    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.kqwzu.mongodb.net/rent-a-car?retryWrites=true&w=majority&appName=Cluster0`
+    `mongodb+srv://ilhanma:5245344aa@techheim.kbe1z.mongodb.net/?retryWrites=true&w=majority&appName=TechHeim`
   );
 }
 connecToDb()
