@@ -38,6 +38,7 @@ export type Product = {
   showInRecommendation: boolean;
   reviews: Review[];
   graphicscard: string;
+  brand: string;
 
 };
 
