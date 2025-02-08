@@ -1,8 +1,8 @@
 import axiosInstance from "../axiosInstance";
 import {
-  RentRequestPayload,
-  GetAllRentResponseType,
-  GetByIdRentResponseType,
+  ProductRequestPayload,
+  GetAllProductResponseType,
+  GetByIdProductResponseType,
 } from "./types";
 
 const getAll = async (
@@ -18,57 +18,50 @@ const getAll = async (
   if (pageParams?.skip) searchParams.append("skip", pageParams.skip.toString());
   if (pageParams?.type) searchParams.append("type", pageParams.type);
 
-  return await axiosInstance.get<GetAllRentResponseType>(
-    `/rent?${searchParams.toString()}`
+  return await axiosInstance.get<GetAllProductResponseType>(
+    `/Product?${searchParams.toString()}`
   );
 };
 const getById = async (id: string) => {
-  return await axiosInstance.get<GetByIdRentResponseType>(`/rent/${id}`);
+  return await axiosInstance.get<GetByIdProductResponseType>(`/Product/${id}`);
 };
-const create = async (data: RentRequestPayload) => {
+const create = async (data: ProductRequestPayload) => {
   const formData = new FormData();
   formData.append("name", data.name);
-  formData.append("fuel", data.fuel.toString());
-  formData.append("gearBox", data.gearBox);
+  formData.append("graphicscard", data.graphicscard);
+  formData.append("brand", data.brand);
   formData.append("price", data.price.toString());
   formData.append("description", data.description);
   formData.append("capacity", data.capacity.toString());
   formData.append("discount", data.discount.toString());
   formData.append("categoryId", data.categoryId);
-  formData.append("pickUpLocation", data.pickUpLocation);
-  data.dropOffLocations.forEach((location) => {
-    formData.append("dropOffLocations", location);
-  });
-
+  formData.append("processor", data.processor);
   data.images?.forEach((image) => {
     formData.append("images", image);
   });
   formData.append("showInRecommendation", data.showInRecommendation.toString());
 
-  return await axiosInstance.post("/rent", formData);
+  return await axiosInstance.post("/Product", formData);
 };
-const edit = async (data: RentRequestPayload & { id?: string }) => {
+const edit = async (data: ProductRequestPayload & { id?: string }) => {
   const formData = new FormData();
   formData.append("name", data.name);
-  formData.append("fuel", data.fuel.toString());
-  formData.append("gearBox", data.gearBox);
+  formData.append("graphicscard", data.graphicscard);
+  formData.append("brand", data.brand);
   formData.append("price", data.price.toString());
   formData.append("description", data.description);
   formData.append("capacity", data.capacity.toString());
   formData.append("discount", data.discount.toString());
   formData.append("categoryId", data.categoryId);
-  formData.append("pickUpLocation", data.pickUpLocation);
-  data.dropOffLocations.forEach((location, index) => {
-    formData.append(`dropOffLocations[${index}]`, location);
-  });
+  formData.append("processor", data.processor);
   if (data.images)
     Array.from(data.images).forEach((image) => {
       formData.append(`images`, image);
     });
   formData.append("showInRecommendation", data.showInRecommendation.toString());
 
-  return await axiosInstance.put(`/rent/${data.id}`, formData);
+  return await axiosInstance.put(`/Product/${data.id}`, formData);
 };
 
-const rentService = { getAll, create, edit, getById };
-export default rentService;
+const productService = { getAll, create, edit, getById };
+export default productService;

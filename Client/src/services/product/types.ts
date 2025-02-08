@@ -1,28 +1,27 @@
-import { Rent } from "@/types";
+import { Product } from "../../types";
 
-export type GetAllRentResponseType = {
-  items: Rent[];
+export type GetAllProductResponseType = {
+  items: Product[];
   message: string;
   total: number;
   skip: number;
   take: number;
 };
-export type GetByIdRentResponseType = {
-  item: Rent;
+export type GetByIdProductResponseType = {
+  item: Product;
   message: string;
 };
 
-export type RentRequestPayload = {
+export type ProductRequestPayload = {
   name: string;
-  fuel: number;
-  gearBox: string;
+  processor: string;
+  graphicscard: string;
   price: number;
   description: string;
   capacity: number;
   discount: number;
   categoryId: string;
-  pickUpLocation: string;
-  dropOffLocations: string[];
+  brand: string;
   images?: File[];
   showInRecommendation: boolean;
 };

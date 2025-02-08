@@ -34,7 +34,7 @@ const productSchema = new Schema({
   },
 
   capacity: {
-    type: Number,
+    type: String,
     required: true,
   },
   price: {

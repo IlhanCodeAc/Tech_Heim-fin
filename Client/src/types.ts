@@ -23,11 +23,10 @@ export type Category = {
   count: number;
 };
 
-export type Rent = {
+export type Product = {
   _id: string;
   name: string;
   fuel: number;
-  gearBox: string;
   price: number;
   description: string;
   capacity: number;
@@ -35,34 +34,34 @@ export type Rent = {
   currency: string;
   discount: number;
   category: Category;
-  dropOffLocations: Location[];
   images: string[];
-  pickUpLocation: Location;
   showInRecommendation: boolean;
   reviews: Review[];
+  graphicscard: string;
+
 };
 
-export type Reservation = {
-  billing: {
-    name: string;
-    phoneNumber: string;
-    address: string;
-    townCity: string;
-  };
-  createdAt: string;
-  dropOffLocation: string;
-  endDate: string;
-  id: string;
-  pickUpLocation: string;
-  rent: Rent | string;
-  startDate: string;
-  status: ReservationStatus;
-  total: number;
-  updatedAt: string;
-  user: string;
-  _id: string;
-  hasReview: boolean;
-};
+// export type Reservation = {
+//   billing: {
+//     name: string;
+//     phoneNumber: string;
+//     address: string;
+//     townCity: string;
+//   };
+//   createdAt: string;
+//   dropOffLocation: string;
+//   endDate: string;
+//   id: string;
+//   pickUpLocation: string;
+//   rent: Rent | string;
+//   startDate: string;
+//   status: ReservationStatus;
+//   total: number;
+//   updatedAt: string;
+//   user: string;
+//   _id: string;
+//   hasReview: boolean;
+// };
 
 export type Review = {
   author: User;
@@ -70,7 +69,7 @@ export type Review = {
   createdAt: string;
   id: string;
   rating: number;
-  rent: Rent;
+  product: Product;
   status: ReviewStatus;
   _id: string;
 };

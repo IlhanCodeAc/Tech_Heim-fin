@@ -4,6 +4,7 @@ import Detailpage from '../Pages/Detail';
 import Home from '../Pages/Home';
 import Productspage from '../Pages/Products';
 import UserPage from '../Pages/User';
+const id = ":id"
 export const ROUTES =[
     {
     element: <MainLayout/>,
@@ -19,7 +20,7 @@ export const ROUTES =[
         },
         
         {
-            path:'products/detail',
+            path:`products/${id}`,
             element:<Detailpage/>
         },
         {

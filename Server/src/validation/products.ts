@@ -66,19 +66,30 @@ export const createRentSchema: Schema = {
     isString: true,
     notEmpty: true,
   },
+  brand: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+  display: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+  processor: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+  graphicscard: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+
   categoryId: {
     in: ["body"],
     isString: true,
-    notEmpty: true,
-  },
-  pickUpLocation: {
-    in: ["body"],
-    isString: true,
-    notEmpty: true,
-  },
-  dropOffLocations: {
-    in: ["body"],
-    isArray: true,
     notEmpty: true,
   },
   currency: {
@@ -127,30 +138,31 @@ export const editRentSchema: Schema = {
   },
   capacity: {
     in: ["body"],
-    isNumeric: true,
+    isString: true,
     notEmpty: true,
   },
+  brand: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+  display: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+  processor: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+  graphicscard: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+
   categoryId: {
-    in: ["body"],
-    isString: true,
-    notEmpty: true,
-  },
-  pickUpLocation: {
-    in: ["body"],
-    isString: true,
-    notEmpty: true,
-  },
-  dropOffLocations: {
-    in: ["body"],
-    isArray: true,
-    notEmpty: true,
-  },
-  fuel: {
-    in: ["body"],
-    isNumeric: true,
-    notEmpty: true,
-  },
-  gearBox: {
     in: ["body"],
     isString: true,
     notEmpty: true,

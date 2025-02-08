@@ -5,6 +5,9 @@ import Review from "../mongoose/schemas/review";
 
 const getAll = async (req: Request, res: Response) => {
   try {
+    const BASE_URL = process.env.BASE_URL || "http://localhost:3000"; 
+    console.log("BASE_URL:", BASE_URL); 
+
     const {
       type,
       take = 10,
@@ -59,9 +62,12 @@ const getAll = async (req: Request, res: Response) => {
 
     items.forEach((item) => {
       item.images = item.images.map(
-        (image) => `${process.env.BASE_URL}/public/product/${image}`
+        (image) => `${BASE_URL}/public/product/${image}`
       );
     });
+
+    console.log("Final Product Data:", items.map((item) => item.images)); // Debugging
+
     res.json({
       message: "success",
       items,
@@ -96,7 +102,7 @@ const getById = async (req: Request, res: Response) => {
     }).populate("author", "name surname");
 
     product.images = product.images.map(
-      (image) => `${process.env.BASE_URL}/public/product/${image}`
+      (image) => `http://localhost:3000/public/product/${image}`
     );
 
     res.json({
