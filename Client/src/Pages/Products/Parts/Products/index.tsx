@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Import Link component
+import { Link } from "react-router-dom";
 import style from "./style.module.css";
 import productService from "../../../../services/product";
 import { Product } from "../../../../types";
+import { useSearchParams } from "react-router-dom";
 
-type Props ={
-  product: Product
-}
+type Props = {
+  product: Product;
+};
 
 const Prods = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    let isMounted = true; 
+    let isMounted = true;
     const fetchProducts = async () => {
       try {
-        const response = await productService.getAll();
+        const searchParamsStr = searchParams.toString();  
+        const response = await productService.getAll({}, searchParamsStr);
         console.log("API Response:", response.data);
-
+  
         if (isMounted && response.data?.items) {
           setProducts((prev) => {
             if (JSON.stringify(prev) !== JSON.stringify(response.data.items)) {
@@ -33,14 +36,13 @@ const Prods = () => {
         if (isMounted) setLoading(false);
       }
     };
-
+  
     fetchProducts();
-
+  
     return () => {
       isMounted = false;
     };
-  }, []);
-
+  }, [searchParams]); // This ensures the products are re-fetched whenever filters change.
   
 
   return (
@@ -53,19 +55,18 @@ const Prods = () => {
         <div className={style.NewProducts}>
           {products.map((product) => (
             <Link to={`/products/${product._id}`} key={product._id} className={style.NewProd}>
-            <div className={style.ProdImage}>
-              <img src={product.images?.[0]} alt={product.name} />
-            </div>
-            <div className={style.ProdDetail}>
-              <p className="flex mt-[16px] mb-[16px] flex-col justify-center flex-1 self-stretch overflow-hidden text-[#0C0C0C] text-ellipsis whitespace-nowrap font-inter text-[16px] font-heavy leading-[24px]">
-                {product.name}
-              </p>
-              <p className="text-[#0C0C0C] font-inter text-[18px] font-heavy leading-normal mt-[40px]">
-                ${product.price}
-              </p>
-            </div>
-          </Link>
-          
+              <div className={style.ProdImage}>
+                <img src={product.images?.[0]} alt={product.name} />
+              </div>
+              <div className={style.ProdDetail}>
+                <p className="flex mt-[16px] mb-[16px] flex-col justify-center flex-1 self-stretch overflow-hidden text-[#0C0C0C] text-ellipsis whitespace-nowrap font-inter text-[16px] font-heavy leading-[24px]">
+                  {product.name}
+                </p>
+                <p className="text-[#0C0C0C] font-inter text-[18px] font-heavy leading-normal mt-[40px]">
+                  ${product.price}
+                </p>
+              </div>
+            </Link>
           ))}
         </div>
       )}

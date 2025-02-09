@@ -6,11 +6,7 @@ import {
 } from "./types";
 
 const getAll = async (
-  pageParams?: {
-    take?: number;
-    skip?: number;
-    type?: "recommended" | "popular";
-  },
+  pageParams?: { take?: number; skip?: number; type?: "recommended" | "popular" },
   searchParamsStr?: string
 ) => {
   const searchParams = new URLSearchParams(searchParamsStr);
@@ -22,6 +18,7 @@ const getAll = async (
     `/Product?${searchParams.toString()}`
   );
 };
+
 const getById = async (id: string) => {
   return await axiosInstance.get<GetByIdProductResponseType>(`/Product/${id}`);
 };

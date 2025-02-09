@@ -39,6 +39,7 @@ export type Product = {
   reviews: Review[];
   graphicscard: string;
   brand: string;
+  processor: string;
 
 };
 
