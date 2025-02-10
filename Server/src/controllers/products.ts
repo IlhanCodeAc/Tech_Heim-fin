@@ -5,9 +5,6 @@ import Review from "../mongoose/schemas/review";
 
 const getAll = async (req: Request, res: Response) => {
   try {
-    const BASE_URL = process.env.BASE_URL || "http://localhost:3000"; 
-    console.log("BASE_URL:", BASE_URL); 
-
     const {
       type,
       take = 10,
@@ -17,6 +14,9 @@ const getAll = async (req: Request, res: Response) => {
       capacity,
       min_price,
       max_price,
+      brand,
+      processor,
+      graphicscard,
     } = req.matchedData;
 
     const filter: Record<string, any> = {
@@ -24,10 +24,12 @@ const getAll = async (req: Request, res: Response) => {
       $or: [],
     };
 
+    // Filter by 'recommended' products
     if (type === "recommended") {
       filter.showInRecommendation = true;
     }
 
+    // Search by name or description
     if (search) {
       filter.$or.push(
         { name: { $regex: new RegExp(search, "i") } },
@@ -35,22 +37,43 @@ const getAll = async (req: Request, res: Response) => {
       );
     }
 
+    // Filter by capacity
     if (capacity) {
       const capacityList = typeof capacity === "string" ? [capacity] : capacity;
       filter.capacity = { $in: capacityList };
     }
 
+    // Filter by category
     if (category) {
       const categoryList = typeof category === "string" ? [category] : category;
       filter.category = { $in: categoryList };
     }
 
+    // Filter by min_price and max_price
     if (min_price) {
       filter.$and.push({ price: { $gte: +min_price } });
     }
 
     if (max_price) {
       filter.$and.push({ price: { $lte: +max_price } });
+    }
+
+    // Filter by brand
+    if (brand) {
+      const brandList = typeof brand === "string" ? [brand] : brand;
+      filter.brand = { $in: brandList };
+    }
+
+    // Filter by processor
+    if (processor) {
+      const processorList = typeof processor === "string" ? [processor] : processor;
+      filter.processor = { $in: processorList };
+    }
+
+    // Filter by graphics card
+    if (graphicscard) {
+      const graphicsCardList = typeof graphicscard === "string" ? [graphicscard] : graphicscard;
+      filter.graphicscard = { $in: graphicsCardList };
     }
 
     const items = await Product.find(filter)
@@ -60,13 +83,12 @@ const getAll = async (req: Request, res: Response) => {
 
     const total = await Product.countDocuments(filter);
 
+    // Update the images' URL
     items.forEach((item) => {
       item.images = item.images.map(
-        (image) => `${BASE_URL}/public/product/${image}`
+        (image) => `http://localhost:3000/public/product/${image}`
       );
     });
-
-    console.log("Final Product Data:", items.map((item) => item.images)); // Debugging
 
     res.json({
       message: "success",
@@ -82,6 +104,8 @@ const getAll = async (req: Request, res: Response) => {
     });
   }
 };
+
+
 
 const getById = async (req: Request, res: Response) => {
   try {
