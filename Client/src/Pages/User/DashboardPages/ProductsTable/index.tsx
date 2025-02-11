@@ -1,81 +1,94 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
-
-interface Product {
-  id: number;
-  image: string;
-  name: string;
-  details: string;
-  price: string;
-}
-
-const productData: Product[] = [
-  {
-    id: 1,
-    image: "/path/to/image1.jpg",
-    name: "Product 1",
-    details: "Description of product 1",
-    price: "$120",
-  },
-  {
-    id: 2,
-    image: "/path/to/image2.jpg",
-    name: "Product 2",
-    details: "Description of product 2",
-    price: "$85",
-  },
-  {
-    id: 3,
-    image: "/path/to/image3.jpg",
-    name: "Product 3",
-    details: "Description of product 3",
-    price: "$150",
-  },
-];
+import productService from "../../../../services/product";
+import { Product } from "../../../../types";
+import axiosInstance from "../../../../services/axiosInstance";
+import ProductDialog from "./CreateProduct";
 
 const ProductTable: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>(productData);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); // State to control ProductDialog visibility
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productService.getAll();
+        setProducts(response.data.items); // Assuming 'items' holds the products
+      } catch (err) {
+        setError("Failed to fetch products.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handleDelete = (product: Product) => {
     setSelectedProduct(product);
     setShowModal(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedProduct) {
-      setProducts(products.filter((p) => p.id !== selectedProduct.id));
-      setShowModal(false);
-      setSelectedProduct(null);
+      try {
+        await axiosInstance.delete(`/Product/${selectedProduct._id}`);
+        setProducts(products.filter((p) => p._id !== selectedProduct._id));
+        setShowModal(false);
+        setSelectedProduct(null);
+      } catch (err) {
+        console.error("Failed to delete product:", err);
+      }
     }
   };
+
+  const openDialog = () => {
+    setIsDialogOpen(true); // Open the dialog when creating a new product
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false); // Close the dialog
+  };
+
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="border border-[#F6F6F6] bg-[#F9F9F9] rounded-lg p-5 w-full overflow-hidden">
       <h2 className="text-xl font-bold mb-4">All Products</h2>
       <div className="w-full overflow-x-auto">
+        <div className="flex justify-between mb-4">
+          <button
+            onClick={openDialog}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          >
+            Create Product
+          </button>
+        </div>
+
         <table className="w-full border-collapse min-w-[600px] md:table hidden">
           <thead>
             <tr className="bg-gray-200 text-left">
               <th className="p-3">Product</th>
-              <th className="p-3">Details</th>
               <th className="p-3">Price</th>
               <th className="p-3">Actions</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product.id} className="border-t">
+              <tr key={product._id} className="border-t">
                 <td className="p-3 flex items-center gap-3 min-w-[150px]">
                   <img
-                    src={product.image}
+                    src={product.images[0]}
                     alt={product.name}
                     className="w-12 h-12 object-cover rounded-md"
                   />
                   <span className="truncate">{product.name}</span>
                 </td>
-                <td className="p-3 min-w-[200px] truncate">{product.details}</td>
                 <td className="p-3 font-semibold min-w-[100px]">{product.price}</td>
                 <td className="p-3 min-w-[100px]">
                   <button
@@ -89,14 +102,18 @@ const ProductTable: React.FC = () => {
             ))}
           </tbody>
         </table>
+
         <div className="md:hidden flex flex-col gap-4">
           {products.map((product) => (
-            <div key={product.id} className="border p-3 rounded-lg bg-white">
+            <div key={product._id} className="border p-3 rounded-lg bg-white">
               <div className="flex items-center gap-3">
-                <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded-md" />
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="w-16 h-16 object-cover rounded-md"
+                />
                 <div>
                   <h3 className="font-semibold">{product.name}</h3>
-                  <p className="text-sm text-gray-600">{product.details}</p>
                   <span className="font-semibold block mt-2">{product.price}</span>
                 </div>
               </div>
@@ -110,6 +127,7 @@ const ProductTable: React.FC = () => {
           ))}
         </div>
       </div>
+
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-lg">
@@ -132,6 +150,8 @@ const ProductTable: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ProductDialog isOpen={isDialogOpen} onClose={closeDialog} />
     </div>
   );
 };

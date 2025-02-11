@@ -1,19 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Clipboard, Edit, User, Lock, MapPin, Mail, Hash } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "../../../../Components/components/ui/dialog";
 import { Button } from "../../../../Components/components/ui/button";
+import { useParams } from "react-router-dom";
+import authService from "../../../../services/auth";
 
 const PersonalData: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState({
-    name: "Ilhan Afandiyev",
-    password: "********",
-    address: "Baku, Azerbaijan",
-    email: "ilhanma@code.edu.az",
-    postalCode: "AZ1000",
+    name: "",
+    password: "",
+    address: "",
+    email: "",
+    postalCode: "",
   });
   const [editField, setEditField] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await authService.getCurrentUser();
+        setFormData({
+          name: response.data.user.name,
+          password: response.data.user.password,
+          address: response.data.user.address,
+          email: response.data.user.email,
+          postalCode: response.data.user.postalCode,
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (id) {
+      fetchUserData();
+    }
+  }, [id]);
 
   const handleCopy = (value: string) => {
     navigator.clipboard.writeText(value);
@@ -46,7 +70,7 @@ const PersonalData: React.FC = () => {
     <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
       {Object.entries(formData).map(([key, value]) => (
         <div key={key} className="flex flex-col gap-3">
-          <label className="capitalize font-medium">{key.replace(/([A-Z])/g, ' $1')}</label>
+          <label className="capitalize font-medium">{key.replace(/([A-Z])/g, " $1")}</label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2">
               {icons[key]}

@@ -1,4 +1,3 @@
-import React from 'react'
 import style from "./style.module.css"
 import Phone from "../../../../assets/Images/image.png"
 import Laptop from "../../../../assets/Images/laptop.png"

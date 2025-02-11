@@ -7,6 +7,7 @@ export type GetAllProductResponseType = {
   skip: number;
   take: number;
 };
+
 export type GetByIdProductResponseType = {
   item: Product;
   message: string;
@@ -14,14 +15,16 @@ export type GetByIdProductResponseType = {
 
 export type ProductRequestPayload = {
   name: string;
-  processor: string;
-  graphicscard: string;
+  processor: string; 
+  graphicscard: string; 
   price: number;
   description: string;
-  capacity: number;
+  capacity: string; 
   discount: number;
-  categoryId: string;
-  brand: string;
+  categoryId: string; 
+  brand: string; 
+  ram: string; 
+  display: string; 
   images?: File[];
   showInRecommendation: boolean;
 };

@@ -1,27 +1,27 @@
 import { Router } from "express";
-import categoryController from "../controllers/category";
+import ramController from "../controllers/ram";
 import { authorize } from "../middlewares/user";
 import validateSchema from "../middlewares/validator";
 import { ramSchema } from "../validation/ram";
 
 const router = Router();
 
-router.get("/", categoryController.getAll);
+router.get("/", ramController.getAll);
 
 router.post(
   "/",
   authorize({ isAdmin: true }),
   validateSchema(ramSchema),
-  categoryController.create
+  ramController.create
 );
 
 router.put(
   "/:id",
   authorize({ isAdmin: true }),
   validateSchema(ramSchema),
-  categoryController.update
+  ramController.update
 );
 
-router.delete("/:id", authorize({ isAdmin: true }), categoryController.remove);
+router.delete("/:id", authorize({ isAdmin: true }), ramController.remove);
 
 export default router;

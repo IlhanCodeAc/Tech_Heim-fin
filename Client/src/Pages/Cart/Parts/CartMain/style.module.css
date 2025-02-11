@@ -217,7 +217,8 @@
             line-height: normal;
             margin-top: 15px;
             border: 1px solid #0C68F4;
-            transition: 0.3s;
+            transition: 0.3s
+            ;
         }
         button:hover{
             color: #0C68F4;

@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     file: Express.Multer.File,
     cb: DestinationCallback
   ) {
-    cb(null, "public/rent");
+    cb(null, "public/product");
   },
   filename: function (
     req: Request,

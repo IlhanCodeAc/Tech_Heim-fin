@@ -6,8 +6,8 @@ export type User = {
   isBlocked: boolean;
   createdAt: string;
   role: UserRole;
-  address:string;
-  number:number;
+  address: string;
+  number: number;
 };
 
 export type Location = {
@@ -23,24 +23,67 @@ export type Category = {
   count: number;
 };
 
+export type Brand = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  count: number;
+};
+
+export type Display = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  count: number;
+};
+
+export type Processor = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  count: number;
+};
+
+export type GraphicsCard = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  count: number;
+};
+
+export type Capacity = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  count: number;
+};
+
+export type Ram = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  count: number;
+};
+
 export type Product = {
   _id: string;
   name: string;
   fuel: number;
   price: number;
   description: string;
-  capacity: number;
   createdAt: string;
   currency: string;
   discount: number;
   category: Category;
+  brand: Brand;
+  display: Display;
+  processor: Processor;
+  graphicscard: GraphicsCard;
+  capacity: Capacity;
+  ram: Ram;
   images: string[];
   showInRecommendation: boolean;
   reviews: Review[];
-  graphicscard: string;
-  brand: string;
-  processor: string;
-
 };
 
 // export type Reservation = {

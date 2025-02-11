@@ -10,8 +10,8 @@ export type RegisterRequestPayloadType = {
   surname: string;
   email: string;
   password: string;
-  address: string;
-  number: number;
+  number: number; 
+  address: string
 };
 
 export type AuthResponseType = {

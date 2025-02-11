@@ -28,7 +28,7 @@ export const ROUTES =[
             element:<Cart/>
         },
         {
-            path:'user:id',
+            path:`user/${id}`,
             element:<UserPage/>
         }
      ]

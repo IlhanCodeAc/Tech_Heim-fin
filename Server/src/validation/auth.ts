@@ -37,6 +37,24 @@ export const registerSchema: Schema = {
       errorMessage: "Email is required",
     },
   },
+  address: {
+    in: ["body"],
+    isString: {
+      errorMessage: "Address must be a string",
+    },
+    notEmpty: {
+      errorMessage: "Address is required",
+    },
+  },
+  number: {
+    in: ["body"],
+    isString: {
+      errorMessage: "Number must be a string",
+    },
+    notEmpty: {
+      errorMessage: "Number is required",
+    },
+  },
 };
 export const forgotPasswordSchema: Schema = {
   email: {

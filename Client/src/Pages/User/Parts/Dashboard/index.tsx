@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, X, User, ShoppingBag, Package, Heart, Mail, LogOut } from "lucide-react";
-import style from "./style.module.css"; 
+import style from "./style.module.css";
 import UserSVG from "../../../../assets/SVGs/user.svg";
 import UserTable from "../../DashboardPages/OrdersUse";
 import AdminTable from "../../DashboardPages/AdminOrders";
 import ProductTable from "../../DashboardPages/ProductsTable";
 import PersonalData from "../../DashboardPages/PersonalData";
 import Wishlist from "../../DashboardPages/Wishlist";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   setSelectedPage: (page: string) => void;
   isOpen: boolean;
   toggleSidebar: () => void;
-  selectedPage: string; 
+  selectedPage: string;
 }
 
 interface ContentProps {
@@ -20,9 +21,33 @@ interface ContentProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSidebar, selectedPage }) => {
+  const [role, setRole] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(localStorage.getItem("user") ? true : false);
+
+  useEffect(() => {
+    // Fetch current user data from local storage
+    const currentUser = localStorage.getItem("user");
+    if (currentUser) {
+      const user = JSON.parse(currentUser);
+      setRole(user.role); // Assuming "role" is a key in the user object
+    }
+  }, []);
+
   const handleClick = (page: string) => {
     setSelectedPage(page);
     if (window.innerWidth < 768) toggleSidebar();
+  };
+
+  const handleLogout = () => {
+    // Clear the user data from local storage
+    localStorage.removeItem("user");
+
+    // Update the logged-in state
+    setIsLoggedIn(false);
+
+    // Redirect to the home page
+    navigate("/", { replace: true });
   };
 
   return (
@@ -54,13 +79,15 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
         >
           <ShoppingBag size={20} className="mr-2" /> Orders
         </li>
-        <li
-          className={`flex items-center p-2 cursor-pointer rounded-md 
-            ${selectedPage === "products" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
-          onClick={() => handleClick("products")}
-        >
-          <Package size={20} className="mr-2" /> Products
-        </li>
+        {role === "admin" && (
+          <li
+            className={`flex items-center p-2 cursor-pointer rounded-md 
+              ${selectedPage === "products" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
+            onClick={() => handleClick("products")}
+          >
+            <Package size={20} className="mr-2" /> Products
+          </li>
+        )}
         <li
           className={`flex items-center p-2 cursor-pointer rounded-md 
             ${selectedPage === "wishlist" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
@@ -78,7 +105,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
       </ul>
 
       <div className="mt-auto">
-        <button className="flex items-center text-red-500 p-2 w-full hover:bg-red-50 rounded-md">
+        <button
+          className="flex items-center text-red-500 p-2 w-full hover:bg-red-50 rounded-md"
+          onClick={handleLogout}
+        >
           <LogOut size={20} className="mr-2" /> Log Out
         </button>
       </div>
@@ -89,10 +119,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
 const Content: React.FC<ContentProps> = ({ selectedPage }) => {
   return (
     <div className="p-5">
-      {selectedPage === "personal-data" && <h2><PersonalData/></h2>}
-      {selectedPage === "orders" && <AdminTable/>}
-      {selectedPage === "products" && <h2><ProductTable/></h2>}
-      {selectedPage === "wishlist" && <h2><Wishlist/></h2>}
+      {selectedPage === "personal-data" && <PersonalData />}
+      {selectedPage === "orders" && <AdminTable />}
+      {selectedPage === "products" && <ProductTable />}
+      {selectedPage === "wishlist" && <Wishlist />}
       {selectedPage === "contact" && <h2>Contact Us Page</h2>}
     </div>
   );
@@ -106,11 +136,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex h-screen border border-[#F6F6F6] bg-[#F9F9F9] rounded-lg p-4 relative">
-      <Sidebar 
-        setSelectedPage={setSelectedPage} 
-        isOpen={isSidebarOpen} 
-        toggleSidebar={toggleSidebar} 
-        selectedPage={selectedPage} 
+      <Sidebar
+        setSelectedPage={setSelectedPage}
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        selectedPage={selectedPage}
       />
       <div className="flex-1 flex flex-col px-4">
         <button className="md:hidden p-2" onClick={toggleSidebar}>

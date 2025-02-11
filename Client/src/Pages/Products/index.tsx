@@ -1,7 +1,6 @@
-import React from 'react'
 import Topcats from './Parts/Topcats'
-import { Sidebar } from '../../Components/Page_Components/SideFilter'
 import Prods from './Parts/Products'
+import {Sidebar} from '../../Components/Page_Components/SideFilter'
 
 const Productspage = () => {
   return (

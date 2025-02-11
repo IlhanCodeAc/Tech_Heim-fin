@@ -2,6 +2,13 @@ import { Request, Response } from "express";
 import Product from "../mongoose/schemas/products";
 import Category from "../mongoose/schemas/category";
 import Review from "../mongoose/schemas/review";
+import Brand from "../mongoose/schemas/brand";
+import Display from "../mongoose/schemas/display";
+import GraphicsCard from "../mongoose/schemas/graphicscard";
+import Capacity from "../mongoose/schemas/capacity";
+import Ram from "../mongoose/schemas/ram";
+import Processor from "../mongoose/schemas/processor";
+import mongoose from "mongoose";
 
 const getAll = async (req: Request, res: Response) => {
   try {
@@ -17,73 +24,79 @@ const getAll = async (req: Request, res: Response) => {
       brand,
       processor,
       graphicscard,
+      ram,
+      display,
     } = req.matchedData;
 
-    const filter: Record<string, any> = {
-      $and: [],
-      $or: [],
-    };
+    const filter: Record<string, any> = {};
 
-    // Filter by 'recommended' products
     if (type === "recommended") {
       filter.showInRecommendation = true;
     }
 
-    // Search by name or description
     if (search) {
-      filter.$or.push(
+      filter.$or = [
         { name: { $regex: new RegExp(search, "i") } },
-        { description: { $regex: new RegExp(search, "i") } }
-      );
+        { description: { $regex: new RegExp(search, "i") } },
+      ];
     }
 
-    // Filter by capacity
-    if (capacity) {
-      const capacityList = typeof capacity === "string" ? [capacity] : capacity;
-      filter.capacity = { $in: capacityList };
-    }
+    const convertToObjectId = (id: any) =>
+      mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : null;
 
-    // Filter by category
     if (category) {
-      const categoryList = typeof category === "string" ? [category] : category;
-      filter.category = { $in: categoryList };
+      const categoryList = Array.isArray(category) ? category : [category];
+      filter.category = { $in: categoryList.map(convertToObjectId) };
     }
 
-    // Filter by min_price and max_price
-    if (min_price) {
-      filter.$and.push({ price: { $gte: +min_price } });
+    if (capacity) {
+      const capacityList = Array.isArray(capacity) ? capacity : [capacity];
+      filter.capacity = { $in: capacityList.map(convertToObjectId) };
     }
 
-    if (max_price) {
-      filter.$and.push({ price: { $lte: +max_price } });
-    }
-
-    // Filter by brand
     if (brand) {
-      const brandList = typeof brand === "string" ? [brand] : brand;
-      filter.brand = { $in: brandList };
+      const brandList = Array.isArray(brand) ? brand : [brand];
+      filter.brand = { $in: brandList.map(convertToObjectId) };
     }
 
-    // Filter by processor
     if (processor) {
-      const processorList = typeof processor === "string" ? [processor] : processor;
-      filter.processor = { $in: processorList };
+      const processorList = Array.isArray(processor) ? processor : [processor];
+      filter.processor = { $in: processorList.map(convertToObjectId) };
     }
 
-    // Filter by graphics card
     if (graphicscard) {
-      const graphicsCardList = typeof graphicscard === "string" ? [graphicscard] : graphicscard;
-      filter.graphicscard = { $in: graphicsCardList };
+      const graphicsCardList = Array.isArray(graphicscard) ? graphicscard : [graphicscard];
+      filter.graphicscard = { $in: graphicsCardList.map(convertToObjectId) };
     }
+
+    if (ram) {
+      const ramList = Array.isArray(ram) ? ram : [ram];
+      filter.ram = { $in: ramList.map(convertToObjectId) };
+    }
+
+    if (display) {
+      const displayList = Array.isArray(display) ? display : [display];
+      filter.display = { $in: displayList.map(convertToObjectId) };
+    }
+
+    if (min_price || max_price) {
+      filter.price = {};
+      if (min_price) filter.price.$gte = parseFloat(min_price as string);
+      if (max_price) filter.price.$lte = parseFloat(max_price as string);
+    }
+
+    console.log("🔎 Received Filters:", req.matchedData);
+    console.log("✅ MongoDB Query Filter:", JSON.stringify(filter, null, 2));
 
     const items = await Product.find(filter)
       .skip(+skip)
       .limit(+take)
-      .populate(["category"]);
+      .populate(["category", "brand", "graphicscard", "processor", "capacity", "ram", "display"]);
+
+    console.log("🔍 Fetched Products:", items.length);
 
     const total = await Product.countDocuments(filter);
 
-    // Update the images' URL
     items.forEach((item) => {
       item.images = item.images.map(
         (image) => `http://localhost:3000/public/product/${image}`
@@ -98,7 +111,7 @@ const getAll = async (req: Request, res: Response) => {
       skip: +skip,
     });
   } catch (err) {
-    console.log(err);
+    console.error("❌ Error in getAll:", err);
     res.status(500).send({
       message: "Internal Server Error",
     });
@@ -111,7 +124,8 @@ const getById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const product = await Product.findById(id).populate(["category"]);
+    const product = await Product.findById(id).populate(["category", "brand", "graphicscard", "processor", "capacity"]);
+
 
     if (!product) {
       res.status(404).json({
@@ -150,10 +164,12 @@ const create = async (req: Request, res: Response) => {
       name,
       description,
       categoryId,
-      processor,
-      graphicscard,
-      brand,
-      capacity,
+      processorId,
+      graphicscardId,
+      brandId,
+      capacityId,
+      ramId,
+      displayId,
       price,
       currency,
       discount,
@@ -161,10 +177,16 @@ const create = async (req: Request, res: Response) => {
     } = req.matchedData;
 
     const category = await Category.findById(categoryId);
+    const processor = await Processor.findById(processorId);
+    const graphicscard = await GraphicsCard.findById(graphicscardId);
+    const brand = await Brand.findById(brandId);
+    const capacity = await Capacity.findById(capacityId);
+    const ram = await Ram.findById(ramId);
+    const display = await Display.findById(displayId);
 
-    if (!category) {
+    if (!category || !processor || !graphicscard || !brand || !capacity || !ram || !display) {
       res.status(404).json({
-        message: "Category Not Found",
+        message: "One or more referenced entities not found",
       });
       return;
     }
@@ -179,6 +201,8 @@ const create = async (req: Request, res: Response) => {
       graphicscard,
       brand,
       capacity,
+      ram,
+      display,
       price,
       currency,
       discount,

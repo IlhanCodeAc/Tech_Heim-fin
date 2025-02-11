@@ -21,20 +21,34 @@ const productSchema = new Schema({
   },
   
   processor: {
-    type: String,
-    default: "", 
+    type: Types.ObjectId,
+    ref: "Processor",
+    required: true,
   },
   graphicscard: {
-    type: String,
-    default: "",
+    type: Types.ObjectId,
+    ref: "Graphics-card",
+    required: true,
   },
   brand: {
-    type: String,
-    default: "",
+    type: Types.ObjectId,
+    ref: "Brand",
+    required: true,
   },
 
   capacity: {
-    type: String,
+    type: Types.ObjectId,
+    ref: "Capacity",
+    required: true,
+  },
+  ram:{
+    type: Types.ObjectId,
+    ref: "Ram",
+    required: true,
+  },
+  display:{
+    type: Types.ObjectId,
+    ref: "Display",
     required: true,
   },
   price: {

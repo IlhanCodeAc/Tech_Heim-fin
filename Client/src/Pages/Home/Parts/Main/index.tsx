@@ -1,4 +1,3 @@
-import React from 'react'
 import style from "./style.module.css"
 import Computer from "../../../../assets/Images/Frame 26086938.png"
 

@@ -22,7 +22,7 @@ const getAll = async (req: Request, res: Response) => {
         reservation.rent as TRent
       ).images.map((image) => {
         if (image.includes(process.env.BASE_URL!)) return image;
-        return `${process.env.BASE_URL}/public/rent/${image}`;
+        return `${process.env.BASE_URL}/public/product/${image}`;
       });
     });
 

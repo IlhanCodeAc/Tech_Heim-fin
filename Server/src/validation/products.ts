@@ -30,7 +30,6 @@ export const getAllRentSchema: Schema = {
   },
   capacity: {
     in: ["query"],
-    isNumeric: true,
     optional: true,
   },
   min_price: {
@@ -61,33 +60,38 @@ export const createRentSchema: Schema = {
     isNumeric: true,
     notEmpty: true,
   },
-  capacity: {
+  capacityId: {
     in: ["body"],
     isString: true,
     notEmpty: true,
   },
-  brand: {
+  brandId: {
     in: ["body"],
     isString: true,
     notEmpty: true,
   },
-  display: {
+  displayId: {
     in: ["body"],
     isString: true,
     notEmpty: true,
   },
-  processor: {
+  processorId: {
     in: ["body"],
     isString: true,
     notEmpty: true,
   },
-  graphicscard: {
+  graphicscardId: {
     in: ["body"],
     isString: true,
     notEmpty: true,
   },
 
   categoryId: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
+  ramId: {
     in: ["body"],
     isString: true,
     notEmpty: true,
@@ -156,13 +160,18 @@ export const editRentSchema: Schema = {
     isString: true,
     notEmpty: true,
   },
+  ram: {
+    in: ["body"],
+    isString: true,
+    notEmpty: true,
+  },
   graphicscard: {
     in: ["body"],
     isString: true,
     notEmpty: true,
   },
 
-  categoryId: {
+  category: {
     in: ["body"],
     isString: true,
     notEmpty: true,

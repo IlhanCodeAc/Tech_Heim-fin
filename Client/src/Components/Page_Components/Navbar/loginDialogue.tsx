@@ -1,0 +1,78 @@
+import React, { useState } from "react";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
+import { Button } from "../../components/ui/button";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useMutation } from "@tanstack/react-query";
+import authService from "../../../services/auth";
+
+// Validation schema for Login
+const loginValidationSchema = Yup.object({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+});
+
+const LoginDialog = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const mutation = useMutation({
+    mutationFn: async (values: { email: string; password: string }) => {
+      const response = await authService.login(values);
+      return response.data;
+    },
+    onSuccess: (data) => {
+        console.log("Login Successful:", data);
+        localStorage.setItem("user", JSON.stringify(data.user)); // Store user
+        setIsOpen(false); // Close modal
+        window.location.reload(); // Refresh to reflect auth state
+      },
+      
+    onError: (error: any) => {
+      console.error("Login Failed:", error.response?.data || error.message);
+    },
+  });
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button onClick={() => setIsOpen(true)} className="bg-blue-500 text-white">
+          Login
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Login</DialogTitle>
+        </DialogHeader>
+
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={loginValidationSchema}
+          onSubmit={(values) => mutation.mutate(values)}
+        >
+          {({ isSubmitting }) => (
+            <Form className="flex flex-col gap-2">
+              <div>
+                <Field name="email" type="email" placeholder="Email" className="border p-2 rounded w-full" />
+                <ErrorMessage name="email" component="div" className="text-red-500" />
+              </div>
+
+              <div>
+                <Field name="password" type="password" placeholder="Password" className="border p-2 rounded w-full" />
+                <ErrorMessage name="password" component="div" className="text-red-500" />
+              </div>
+
+              <Button type="submit" className="bg-blue-500 text-white" disabled={isSubmitting || mutation.isPending}>
+                {mutation.isPending ? "Logging in..." : "Login"}
+              </Button>
+              <Button type="button" className="bg-gray-500 text-white mt-2" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default LoginDialog;

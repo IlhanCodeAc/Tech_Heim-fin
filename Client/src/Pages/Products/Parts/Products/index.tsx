@@ -1,55 +1,65 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import style from "./style.module.css";
 import productService from "../../../../services/product";
 import { Product } from "../../../../types";
-import { useSearchParams } from "react-router-dom";
-
-type Props = {
-  product: Product;
-};
+import ramService from "../../../../services/ram"; 
+import { fetchFilteredProducts } from "../../../../filterUtil";
 
 const Prods = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [ramFilter, setRamFilter] = useState<string | null>(null); 
+  const [ramOptions, setRamOptions] = useState<{ _id: string; name: string }[]>([]); 
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchProducts = async () => {
+    const fetchRamOptions = async () => {
       try {
-        const searchParamsStr = searchParams.toString();  
-        const response = await productService.getAll({}, searchParamsStr);
-        console.log("API Response:", response.data);
-  
-        if (isMounted && response.data?.items) {
-          setProducts((prev) => {
-            if (JSON.stringify(prev) !== JSON.stringify(response.data.items)) {
-              return response.data.items;
-            }
-            return prev;
-          });
-        }
+        const response = await ramService.getAll(); 
+        setRamOptions(response.data.items); 
       } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        if (isMounted) setLoading(false);
+        console.error("Error fetching RAM options:", error);
       }
     };
-  
-    fetchProducts();
-  
-    return () => {
-      isMounted = false;
+
+    fetchRamOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      
+      const filters = {
+        graphics_card: searchParams.get("graphics_card") || undefined,
+        processor: searchParams.get("processor") || undefined,
+        brand: searchParams.get("brand") || undefined,
+        min_price: searchParams.get("min_price") ? Number(searchParams.get("min_price")) : undefined,
+        max_price: searchParams.get("max_price") ? Number(searchParams.get("max_price")) : undefined,
+        category: searchParams.get("category") || undefined,
+        capacity: searchParams.get("capacity") || undefined,
+        ram: searchParams.get("ram") || undefined,
+      };
+
+      const filteredProducts = await fetchFilteredProducts(filters);
+      setProducts(filteredProducts);
+      setLoading(false);
     };
-  }, [searchParams]); // This ensures the products are re-fetched whenever filters change.
-  
+
+    fetchProducts();
+  }, [searchParams]);
 
   return (
     <div>
       {loading ? (
-        <div className="flex justify-center items-center h-32">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+        <div className={style.NewProducts}>
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className={style.SkeletonProd}>
+              <div className={style.SkeletonImage}></div>
+              <div className={style.SkeletonText}></div>
+              <div className={style.SkeletonPrice}></div>
+            </div>
+          ))}
         </div>
       ) : (
         <div className={style.NewProducts}>
