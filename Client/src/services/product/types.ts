@@ -15,16 +15,16 @@ export type GetByIdProductResponseType = {
 
 export type ProductRequestPayload = {
   name: string;
-  processor: string; 
-  graphicscard: string; 
-  price: string;
+  processorId: string; 
+  graphicscardId: string; 
+  price: number;
   description: string;
-  capacity: string; 
-  discount: string;
+  capacityId: string; 
+  discount: number;
   categoryId: string; 
-  brand: string; 
-  ram: string; 
-  display: string; 
+  brandId: string; 
+  ramId: string; 
+  displayId: string; 
   images?: File[];
   showInRecommendation: boolean;
 };

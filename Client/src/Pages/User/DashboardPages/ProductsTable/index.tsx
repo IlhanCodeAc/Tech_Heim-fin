@@ -6,6 +6,7 @@ import axiosInstance from "../../../../services/axiosInstance";
 import ProductDialog from "./CreateProduct";
 import ProductFormDialog from "./CreateProduct";
 import YourDialogComponent from "./CreateProduct";
+import ProductCreateDialog from "./CreateProduct";
 
 const ProductTable: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -68,7 +69,7 @@ const ProductTable: React.FC = () => {
   <button onClick={openDialog} className="px-4 py-2 bg-blue-500 text-white rounded-md">
     Create Product
   </button>
-  <ProductDialog open={isDialogOpen} onClose={closeDialog} />
+  <ProductCreateDialog open={isDialogOpen} onClose={closeDialog} />
 </div>
 
         </div>
