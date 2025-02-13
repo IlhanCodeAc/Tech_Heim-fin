@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../../components/ui/button";
 import { Sidebar } from "../Sidebar";
 import Logo from "../../../assets/Images/logo.svg";
 import SearchLogo from "../../../assets/SVGs/search-normal.svg";
@@ -53,7 +52,7 @@ const Navbar = () => {
 
         <div className={style.Right}>
           <div className={style.Search}>
-            <img src={SearchLogo} alt="Search" />
+          <Link to="/products"><img src={SearchLogo} alt="Search" /></Link>  
           </div>
           <div className={style.Basket}>
             <img src={BasketLogo} alt="Basket" />

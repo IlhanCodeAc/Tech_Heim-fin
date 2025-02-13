@@ -7,7 +7,6 @@ const Productspage = () => {
     <div>
       <Sidebar/>
         <div className="container">
-        <Topcats/>
         <Prods/>
         </div>
     </div>

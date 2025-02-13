@@ -1,36 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import style from "./style.module.css";
-import productService from "../../../../services/product";
 import { Product } from "../../../../types";
-import ramService from "../../../../services/ram"; 
 import { fetchFilteredProducts } from "../../../../filterUtil";
+import { Search } from "lucide-react";
 
 const Prods = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [ramFilter, setRamFilter] = useState<string | null>(null); 
-  const [ramOptions, setRamOptions] = useState<{ _id: string; name: string }[]>([]); 
-  const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    const fetchRamOptions = async () => {
-      try {
-        const response = await ramService.getAll(); 
-        setRamOptions(response.data.items); 
-      } catch (error) {
-        console.error("Error fetching RAM options:", error);
-      }
-    };
-
-    fetchRamOptions();
-  }, []);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       
       const filters = {
+        search: searchParams.get("search") || undefined,
         graphics_card: searchParams.get("graphics_card") || undefined,
         processor: searchParams.get("processor") || undefined,
         brand: searchParams.get("brand") || undefined,
@@ -49,8 +36,32 @@ const Prods = () => {
     fetchProducts();
   }, [searchParams]);
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    const newParams = new URLSearchParams(searchParams);
+    if (value) {
+      newParams.set("search", value);
+    } else {
+      newParams.delete("search");
+    }
+    navigate(`?${newParams.toString()}`);
+  };
+
   return (
-    <div>
+    <div className="mb-[100%]">
+      <div className="flex items-center bg-white shadow-md rounded-lg px-4 py-2 mb-6 w-full max-w-md mx-auto border border-gray-300 focus-within:border-blue-500">
+        <Search className="text-gray-400 mr-2" size={20} />
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className=" bg-transparent outline-none text-gray-800 placeholder-gray-500"
+        />
+      </div>
+
       {loading ? (
         <div className={style.NewProducts}>
           {[...Array(6)].map((_, index) => (
