@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import categoryService from '../../../../services/category';
 import { toast } from "sonner";
+import Swal from 'sweetalert2';
 import {
   Dialog,
   DialogClose,
@@ -151,25 +152,31 @@ export default function ProductCreateDialog() {
       graphicscardId: '',
       ramId: '',
       processorId: '',
-      images: [], 
+      images: [],
       showInRecommendation: false
     },
   });
   
-
-  
-  
-  const {mutateAsync} = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: productService.create
-    })
+  });
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Form Submitted with values:", values);
     const promise = mutateAsync(values);
     toast.promise(promise, {
-      loading:"Creating a product...",
-      success:"Product created succssfully!",
-      error:"Something went wrong"
-    })
+      loading: "Creating a product...",
+      success: "Product created succssfully!",
+      error: "Something went wrong"
+    });
+    promise.then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Product created successfully!',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    });
   }
   return (
     <Dialog>
@@ -196,47 +203,47 @@ export default function ProductCreateDialog() {
               )}
             />
 
-<FormField
-  control={form.control}
-  name="price"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Price</FormLabel>
-      <FormControl>
-        <Input
-          type="number"
-          placeholder="Enter price..."
-          {...field}
-          value={field.value ?? ""}
-          onChange={(e) => field.onChange(Number(e.target.value) || 0)}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter price..."
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-<FormField
-  control={form.control}
-  name="discount"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Discount</FormLabel>
-      <FormControl>
-        <Input
-          type="number"
-          placeholder="Enter discount..."
-          {...field}
-          value={field.value ?? ""}
-          onChange={(e) => field.onChange(Number(e.target.value) || 0)}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
+            <FormField
+              control={form.control}
+              name="discount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter discount..."
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-<FormField
+            <FormField
               control={form.control}
               name="showInRecommendation"
               render={({ field }) => (
@@ -256,7 +263,6 @@ export default function ProductCreateDialog() {
                 </FormItem>
               )}
             />
-
 
             <FormField
               control={form.control}
@@ -446,25 +452,24 @@ export default function ProductCreateDialog() {
                 </FormItem>
               )}
             />
-<FormField
-  control={form.control}
-  name="images"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Upload Files</FormLabel>
-      <FormControl>
-        <Input
-          multiple
-          type="file"
-          accept="image/jpeg, image/png, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          onChange={(e) => field.onChange(e.target.files)}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Upload Files</FormLabel>
+                  <FormControl>
+                    <Input
+                      multiple
+                      type="file"
+                      accept="image/jpeg, image/png, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      onChange={(e) => field.onChange(e.target.files)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="md:col-span-2 flex justify-end gap-4">
               <DialogClose asChild>
