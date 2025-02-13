@@ -68,7 +68,6 @@ export type Ram = {
 export type Product = {
   _id: string;
   name: string;
-  fuel: number;
   price: number;
   description: string;
   createdAt: string;

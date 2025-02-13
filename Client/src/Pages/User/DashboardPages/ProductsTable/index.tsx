@@ -4,6 +4,8 @@ import productService from "../../../../services/product";
 import { Product } from "../../../../types";
 import axiosInstance from "../../../../services/axiosInstance";
 import ProductDialog from "./CreateProduct";
+import ProductFormDialog from "./CreateProduct";
+import YourDialogComponent from "./CreateProduct";
 
 const ProductTable: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -62,12 +64,13 @@ const ProductTable: React.FC = () => {
       <h2 className="text-xl font-bold mb-4">All Products</h2>
       <div className="w-full overflow-x-auto">
         <div className="flex justify-between mb-4">
-          <button
-            onClick={openDialog}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Create Product
-          </button>
+        <div className="flex justify-between mb-4">
+  <button onClick={openDialog} className="px-4 py-2 bg-blue-500 text-white rounded-md">
+    Create Product
+  </button>
+  <ProductDialog open={isDialogOpen} onClose={closeDialog} />
+</div>
+
         </div>
 
         <table className="w-full border-collapse min-w-[600px] md:table hidden">
@@ -150,8 +153,7 @@ const ProductTable: React.FC = () => {
           </div>
         </div>
       )}
-
-      <ProductDialog isOpen={isDialogOpen} onClose={closeDialog} />
+ 
     </div>
   );
 };

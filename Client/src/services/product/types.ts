@@ -17,10 +17,10 @@ export type ProductRequestPayload = {
   name: string;
   processor: string; 
   graphicscard: string; 
-  price: number;
+  price: string;
   description: string;
   capacity: string; 
-  discount: number;
+  discount: string;
   categoryId: string; 
   brand: string; 
   ram: string; 

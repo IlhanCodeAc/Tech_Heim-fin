@@ -171,7 +171,7 @@ const create = async (req: Request, res: Response) => {
       ramId,
       displayId,
       price,
-      currency,
+      // currency,
       discount,
       showInRecommendation = false,
     } = req.matchedData;
@@ -204,7 +204,7 @@ const create = async (req: Request, res: Response) => {
       ram,
       display,
       price,
-      currency,
+      // currency,
       discount,
       images,
       showInRecommendation,

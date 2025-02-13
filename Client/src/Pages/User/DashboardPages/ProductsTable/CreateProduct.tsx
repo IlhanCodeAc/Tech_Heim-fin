@@ -1,123 +1,177 @@
-import { useState, useEffect } from "react";
-import categoryService from "../../../../services/category";
-import brandService from "../../../../services/brand";
-import processorService from "../../../../services/processor";
-import graphicsCardService from "../../../../services/graphicscard";
-import capacityService from "../../../../services/capacity";
-import ramService from "../../../../services/ram";
-import displayService from "../../../../services/display";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../../../../Components/components/ui/dialog";
-import { Label } from "../../../../Components/components/ui/label";
-import { Input } from "../../../../Components/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../../Components/components/ui/select";
-import { Button } from "../../../../Components/components/ui/button";
+import { useForm } from 'react-hook-form';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../../../Components/components/ui/dialog';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from '../../../../Components/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../../../Components/components/ui/form';
+import { Textarea } from '../../../../Components/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../../Components/components/ui/select';
+import { Input } from '../../../../Components/components/ui/input';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import categoryService from '../../../../services/category';
+import brandService from '../../../../services/brand';
 
-const ProductDialog = ({ open, onClose }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    categoryId: "",
-    processor: "",
-    graphicscard: "",
-    brand: "",
-    capacity: "",
-    ram: "",
-    display: "",
-    price: "",
-    discount: "",
-    images: [],
+const formSchema = z.object({
+  name: z.string().min(2),
+  description: z.string(),
+  price: z
+    .number({
+      invalid_type_error: 'Price must be a number',
+      required_error: 'Price is required',
+    })
+    .positive(),
+  categoryId: z.string().min(2, { message: 'Category is required' }),
+});
+
+function onSubmit(data: z.infer<typeof formSchema>) {
+  // const promise = createProduct(data).then(() => {
+  //   form.reset();
+  //   cancelButtonRef.current?.click();
+  // });
+  // toast.promise(promise, {
+  //   loading: 'Creating product...',
+  //   success: 'Product created successfully',
+  //   error: 'Failed to create product',
+  // });
+}
+
+
+export default function ProductCreateDialog() {
+
+  const {data} = useQuery(
+    {
+      queryKey: ['categories'],
+      queryFn: categoryService.getAll, 
+    },
+   
+  );
+console.log(data)
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      price: 0,
+      categoryId: '',
+    },
   });
-
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [processors, setProcessors] = useState([]);
-  const [graphicsCards, setGraphicsCards] = useState([]);
-  const [capacities, setCapacities] = useState([]);
-  const [rams, setRams] = useState([]);
-  const [displays, setDisplays] = useState([]);
-
-  useEffect(() => {
-    categoryService.getAll().then((res) => setCategories(res.data.items ?? []));
-    brandService.getAll().then((res) => setBrands(res.data.items ?? []));
-    processorService.getAll().then((res) => setProcessors(res.data.items ?? []));
-    graphicsCardService.getAll().then((res) => setGraphicsCards(res.data.items ?? []));
-    capacityService.getAll().then((res) => setCapacities(res.data.items ?? []));
-    ramService.getAll().then((res) => setRams(res.data.items ?? []));
-    displayService.getAll().then((res) => setDisplays(res.data.items ?? []));
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, images: Array.from(e.target.files) }));
-  };
-
-  const handleSubmit = async () => {
-    try {
-      await productService.create(formData);
-      onClose();
-    } catch (error) {
-      console.error("Error creating product:", error);
-    }
-  };
-
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog>
+      <DialogTrigger>
+        <button>Create Product</button>
+      </DialogTrigger>
+
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Product</DialogTitle>
+          <DialogTitle>Product Create</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" value={formData.name} onChange={handleChange} />
-          
-          <Label htmlFor="description">Description</Label>
-          <Input id="description" name="description" value={formData.description} onChange={handleChange} />
-          
-          <Label>Category</Label>
-          <Select value={formData.categoryId} onValueChange={(value) => setFormData((prev) => ({ ...prev, categoryId: value }))}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Category" />
-            </SelectTrigger>
-            <SelectContent>
-  {categories.map((cat) => (
-    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-  ))}
-</SelectContent>
 
-          </Select>
-          
-          <Label>Brand</Label>
-          <Select value={formData.brand} onValueChange={(value) => setFormData((prev) => ({ ...prev, brand: value }))}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Brand" />
-            </SelectTrigger>
-            <SelectContent>
-              {brands.map((brand) => (
-                <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Label htmlFor="price">Price</Label>
-          <Input id="price" name="price" type="number" value={formData.price} onChange={handleChange} />
-          
-          <Label htmlFor="discount">Discount</Label>
-          <Input id="discount" name="discount" type="number" value={formData.discount} onChange={handleChange} />
-          
-          <Label htmlFor="images">Images</Label>
-          <Input id="images" type="file" multiple onChange={handleFileChange} />
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Create</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="type..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Discount </FormLabel>
+                  <FormControl>
+                    <Input placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="type..."
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange({ target: { value: parseFloat(e.target.value) } });
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {/* {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))} */}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="type..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Image</FormLabel>
+                    <img src={field.value} alt="" />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogClose asChild>
+              {/* <Button type="button" ref={cancelButtonRef} variant="secondary" className="mr-2">
+                Cancel
+              </Button> */}
+            </DialogClose>
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
-};
-
-export default ProductDialog;
+}

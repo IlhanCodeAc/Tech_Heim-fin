@@ -8,7 +8,6 @@ import cors from "cors";
 import path from "path";
 import { createServer } from "node:http";
 
-import reservationRoutes from "./routes/reservation";
 import locationRoutes from "./routes/location";
 import categoryRoutes from "./routes/category";
 import graphicscardRoutes from "./routes/graphicscard";
@@ -69,7 +68,6 @@ app.use("/processor", processorRoutes);
 app.use("/category", categoryRoutes);
 app.use("/location", locationRoutes);
 app.use("/product", productRoutes);
-app.use("/reservation", reservationRoutes);
 app.use("/review", reviewRoutes);
 app.use("/conversation", conversationRoutes);
 

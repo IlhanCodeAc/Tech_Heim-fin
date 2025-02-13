@@ -13,6 +13,7 @@ const productSchema = new Schema({
   showInRecommendation: {
     type: Boolean,
     default: false,
+    required: false 
   },
   category: {
     type: Types.ObjectId,
