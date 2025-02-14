@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const reservationSchema = new Schema({
   rent: {
     type: Types.ObjectId,
-    ref: "Rent",
+    ref: "Product",
     required: true,
   },
   user: {

@@ -1,12 +1,12 @@
 import { Schema } from "express-validator";
 
 export const createReviewSchema: Schema = {
-  reservationId: {
-    in: ["body"],
-    isString: true,
-    notEmpty: true,
-  },
-  rentId: {
+  // reservationId: {
+  //   in: ["body"],
+  //   isString: true,
+  //   notEmpty: true,
+  // },
+  productId: {
     in: ["body"],
     isString: true,
     notEmpty: true,

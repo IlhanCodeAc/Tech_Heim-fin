@@ -25,7 +25,9 @@
             height: 100px;
             object-fit: contain;
             @media screen and (max-width: 767px) {
-                /* No changes here */
+                width: 100px;
+                object-fit: contain;
+                height: 100px;
             }
         }
     }

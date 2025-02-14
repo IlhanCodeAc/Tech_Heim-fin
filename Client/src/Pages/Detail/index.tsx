@@ -37,8 +37,9 @@ const Detailpage = () => {
     <div className="container mt-[80px] mb-[80px]">
       {product ? (
         <>
-          <Detailmain product={product} /> 
-          <Comments />
+          <Detailmain productId={product._id} />
+          <Comments productId={product._id} /> 
+
         </>
       ) : (
         <p>Product not found</p> 

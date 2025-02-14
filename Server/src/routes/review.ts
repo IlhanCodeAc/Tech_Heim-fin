@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/", authorize({ isAdmin: true }), reviewController.getAll);
 
-router.get("/:rentId", reviewController.getByRentId);
+router.get("/:productId", reviewController.getByProductId);
 
 router.post(
   "/",

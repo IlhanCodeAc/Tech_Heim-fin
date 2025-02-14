@@ -1,12 +1,10 @@
-import { ReviewStatus } from "@/types";
-
+import { ReviewStatus } from "../../types";
 export type CreateReviewRequestPayload = {
   rating: number;
   content: string;
-  rentId: string;
-  reservationId: string;
+  productId: string;
+  reservationId?: string; // <-- Make this optional
 };
-
 export type ChangeStatusRequestPayload = {
   id: string;
   status: ReviewStatus.Approved | ReviewStatus.Rejected;

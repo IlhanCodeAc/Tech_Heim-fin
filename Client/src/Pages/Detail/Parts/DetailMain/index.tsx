@@ -17,7 +17,7 @@ interface Product {
   price: number;
   images: string[];
   display: { name: string };
-  ram: { name: string }; 
+  ram: { name: string };
 }
 
 const Detailmain: React.FC = () => {
@@ -25,25 +25,27 @@ const Detailmain: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [mainImage, setMainImage] = useState<string>("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
 
   useEffect(() => {
     const fetchProduct = async () => {
       if (!id) return;
-  
+
       try {
         const response = await productService.getById(id);
         const fetchedProduct: Product = response.data.item;
-        console.log(fetchedProduct); 
+        console.log(fetchedProduct);
         setProduct(fetchedProduct);
         setMainImage(fetchedProduct.images?.[0] || "");
       } catch (error) {
         console.error("Error fetching product details:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
-  
+
     fetchProduct();
   }, [id]);
-  
 
   const handleImageClick = (img: string) => {
     setMainImage(img);
@@ -53,8 +55,12 @@ const Detailmain: React.FC = () => {
     setIsFavorite((prev) => !prev);
   };
 
+  if (loading) {
+    return <div>Loading...</div>; // Display loading message while fetching data
+  }
+
   if (!product) {
-    return <div>Loading...</div>;
+    return <div>Product not found</div>; // Handle case when product is not found
   }
 
   return (
@@ -100,12 +106,12 @@ const Detailmain: React.FC = () => {
             <div className={style.MidDetLeft}>
               <p>Brand</p>
               <p>Product Name</p>
-              <p>Category</p> 
+              <p>Category</p>
             </div>
             <div className={style.MidDetRight}>
-              <h3>{product.brand?.name || "N/A"}</h3> 
+              <h3>{product.brand?.name || "N/A"}</h3>
               <h3>{product.name}</h3>
-              <h3>{product.category?.name || "N/A"}</h3> 
+              <h3>{product.category?.name || "N/A"}</h3>
             </div>
           </div>
         </div>
@@ -127,19 +133,19 @@ const Detailmain: React.FC = () => {
             </div>
             <div className={style.DetGray}>
               <p>Capacity</p>
-              <h3>{product.capacity.name || "N/A"}</h3> 
+              <h3>{product.capacity?.name || "N/A"}</h3>
             </div>
             <div className={style.DetWhite}>
               <p>Category</p>
-              <h3>{product.category?.name || "N/A"}</h3> 
+              <h3>{product.category?.name || "N/A"}</h3>
             </div>
             <div className={style.DetGray}>
               <p>RAM</p>
-              <h3>{product.ram.name || "N/A"}</h3> 
+              <h3>{product.ram?.name || "N/A"}</h3>
             </div>
             <div className={style.DetWhite}>
               <p>Display</p>
-              <h3>{product.display.name || "N/A"}</h3> 
+              <h3>{product.display?.name || "N/A"}</h3>
             </div>
           </div>
         </div>

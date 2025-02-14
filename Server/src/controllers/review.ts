@@ -20,21 +20,21 @@ const getAll = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   try {
     const user = req.user;
-    const { reservationId, rentId, content, rating } = req.matchedData;
+    const { reservationId, productId, content, rating } = req.matchedData;
 
     const reservation = await Reservation.findById(reservationId);
 
-    if (!reservation) {
-      res.status(404).json({ message: "Reservation not found" });
-      return;
-    }
+    // if (!reservation) {
+    //   res.status(404).json({ message: "Reservation not found" });
+    //   return;
+    // }
 
-    if (reservation.hasReview) {
-      res.status(400).json({ message: "Reservation already has a review" });
-      return;
-    }
+    // if (reservation.hasReview) {
+    //   res.status(400).json({ message: "Reservation already has a review" });
+    //   return;
+    // }
 
-    const rent = await Rent.findById(rentId);
+    const rent = await Rent.findById(productId);
 
     if (!rent) {
       res.status(404).json({ message: "Rent not found" });
@@ -43,13 +43,13 @@ const create = async (req: Request, res: Response) => {
 
     const review = await Review.create({
       author: user!._id,
-      rent: rentId,
+      rent: productId,
       content,
       rating,
     });
 
-    reservation.hasReview = true;
-    await reservation.save();
+    // reservation.hasReview = true;
+    // await reservation.save();
 
     rent.reviews.push(review._id);
     await rent.save();
@@ -89,12 +89,12 @@ const changeStatus = async (req: Request, res: Response) => {
   }
 };
 
-const getByRentId = async (req: Request, res: Response) => {
+const getByProductId = async (req: Request, res: Response) => {
   try {
-    const { rentId } = req.params;
+    const { ProductId } = req.params;
 
     const reviews = await Review.find({
-      rent: rentId,
+      rent: ProductId,
       status: "approved",
     }).populate("author");
 
@@ -112,5 +112,5 @@ export default {
   getAll,
   create,
   changeStatus,
-  getByRentId,
+  getByProductId,
 };

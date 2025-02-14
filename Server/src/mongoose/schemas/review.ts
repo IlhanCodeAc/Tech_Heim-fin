@@ -9,7 +9,7 @@ const reviewSchema = new Schema({
   },
   rent: {
     type: Types.ObjectId,
-    ref: "Rent",
+    ref: "Product",
     required: true,
   },
   content: {
