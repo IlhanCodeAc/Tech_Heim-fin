@@ -13,14 +13,12 @@ const productSchema = new Schema({
   showInRecommendation: {
     type: Boolean,
     default: false,
-    required: false 
   },
   category: {
     type: Types.ObjectId,
     ref: "Category",
     required: true,
   },
-  
   processor: {
     type: Types.ObjectId,
     ref: "Processor",
@@ -36,18 +34,17 @@ const productSchema = new Schema({
     ref: "Brand",
     required: true,
   },
-
   capacity: {
     type: Types.ObjectId,
     ref: "Capacity",
     required: true,
   },
-  ram:{
+  ram: {
     type: Types.ObjectId,
     ref: "Ram",
     required: true,
   },
-  display:{
+  display: {
     type: Types.ObjectId,
     ref: "Display",
     required: true,
@@ -75,6 +72,12 @@ const productSchema = new Schema({
   reviews: {
     type: [Types.ObjectId],
     ref: "Review",
+    default: [],
+  },
+  // This section is added for cart functionality
+  cart: {
+    type: [Types.ObjectId],
+    ref: "Cart", // Linking to a cart schema
     default: [],
   },
 });

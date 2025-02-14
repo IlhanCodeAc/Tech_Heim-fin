@@ -85,27 +85,23 @@ export type Product = {
   reviews: Review[];
 };
 
-// export type Reservation = {
-//   billing: {
-//     name: string;
-//     phoneNumber: string;
-//     address: string;
-//     townCity: string;
-//   };
-//   createdAt: string;
-//   dropOffLocation: string;
-//   endDate: string;
-//   id: string;
-//   pickUpLocation: string;
-//   rent: Rent | string;
-//   startDate: string;
-//   status: ReservationStatus;
-//   total: number;
-//   updatedAt: string;
-//   user: string;
-//   _id: string;
-//   hasReview: boolean;
-// };
+export type Cart = {
+  _id: string;
+  user: User;
+  items: CartItem[];
+  total: number;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+};
+
+export type CartItem = {
+  product: Product;
+  quantity: number;
+  price: number;
+  discount: number;
+  _id: string;
+};
 
 export type Review = {
   author: User;

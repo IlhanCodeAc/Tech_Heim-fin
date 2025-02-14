@@ -1,26 +1,30 @@
 import axiosInstance from "../axiosInstance";
 import {
-  ChangeStatusRequestPayload,
-  CreateReservationRequestPayload,
+  AddToCartRequestPayload,
+  RemoveFromCartRequestPayload,
+  GetCartResponseType,
+  AddToCartResponseType,
+  RemoveFromCartResponseType,
+  ClearCartResponseType,
 } from "./types";
 
 const getAll = async () => {
-  return await axiosInstance.get("/reservation");
+  return await axiosInstance.get<GetCartResponseType>("/cart");
 };
 
-const create = async (data: CreateReservationRequestPayload) => {
-  return await axiosInstance.post("/reservation", data);
+const addToCart = async (data: AddToCartRequestPayload) => {
+  return await axiosInstance.post<AddToCartResponseType>("/cart", data);
 };
 
-const changeStatus = async (data: ChangeStatusRequestPayload) => {
-  return await axiosInstance.patch(`/reservation/${data.id}/change-status`, {
-    status: data.status,
-  });
-};
-const cancel = async (data: { id: string }) => {
-  return await axiosInstance.patch(`/reservation/${data.id}/cancel`);
+const removeFromCart = async (data: RemoveFromCartRequestPayload) => {
+  return await axiosInstance.delete<RemoveFromCartResponseType>(`/cart/${data.productId}`);
 };
 
-const reservationService = { create, getAll, changeStatus, cancel };
 
-export default reservationService;
+const clearCart = async () => {
+  return await axiosInstance.delete<ClearCartResponseType>("/cart/clear");
+};
+
+const cartService = { getAll, addToCart, removeFromCart, clearCart };
+
+export default cartService;

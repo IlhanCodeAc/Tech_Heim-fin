@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
 import Logo from "../../../assets/Images/logo.svg";
@@ -9,7 +9,7 @@ import LoginDialog from "./loginDialogue";
 import RegisterDialog from "./registerDialogue";
 import authService from "../../../services/auth";
 import { User } from "../../../types";
-import UserLogo from "../../../assets/SVGs/user.svg"
+import UserLogo from "../../../assets/SVGs/user.svg";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -18,7 +18,7 @@ const Navbar = () => {
     const fetchUser = async () => {
       try {
         const response = await authService.getCurrentUser();
-        setUser(response.data.user); 
+        setUser(response.data.user);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -52,19 +52,23 @@ const Navbar = () => {
 
         <div className={style.Right}>
           <div className={style.Search}>
-          <Link to="/products"><img src={SearchLogo} alt="Search" /></Link>  
+            <Link to="/products"><img src={SearchLogo} alt="Search" /></Link>
           </div>
+
+          {/* Cart Link */}
           <div className={style.Basket}>
-            <img src={BasketLogo} alt="Basket" />
+            {user ? (
+              <Link to={`/user/${user._id}/cart`}>
+                <img src={BasketLogo} alt="Basket" />
+              </Link>
+            ) : (
+              <img src={BasketLogo} alt="Basket" />
+            )}
           </div>
 
           {user ? (
             <Link to={`/user/${user._id}`} className="flex items-center gap-2">
-              <img 
-                src={UserLogo} 
-                alt="User Icon" 
-                className="w-[20] h-[20] "
-              />
+              <img src={UserLogo} alt="User Icon" className="w-[20] h-[20]" />
             </Link>
           ) : (
             <>

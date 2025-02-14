@@ -20,6 +20,7 @@ import authRoutes from "./routes/auth";
 import productRoutes from "./routes/products";
 import reviewRoutes from "./routes/review";
 import conversationRoutes from "./routes/conversation";
+import cartRoutes from "./routes/cart"
 
 import { connectSocket } from "./socket";
 import "./auth/local-strategy";
@@ -58,6 +59,7 @@ app.use(passport.session());
 app.use("/public", express.static(path.join(__dirname, "../public")));
 
 app.use("/auth", authRoutes);
+app.use("/cart", cartRoutes);
 app.use("/category", categoryRoutes);
 app.use("/graphicscard", graphicscardRoutes);
 app.use("/capacity", capacityRoutes);

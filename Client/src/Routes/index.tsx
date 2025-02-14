@@ -24,7 +24,7 @@ export const ROUTES =[
             element:<Detailpage/>
         },
         {
-            path:'user:id/cart',
+            path:`user/${id}/cart`,
             element:<Cart/>
         },
         {

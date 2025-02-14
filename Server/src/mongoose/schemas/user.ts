@@ -44,6 +44,11 @@ const userSchema = new Schema({
     type: Date,
     default: null,
   },
+  cart: {
+    type: Schema.Types.ObjectId,
+    ref: "Cart", 
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

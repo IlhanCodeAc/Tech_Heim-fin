@@ -5,6 +5,8 @@ import style from "./style.module.css";
 import Verify from "../../../../assets/SVGs/verify.svg";
 import Delivery from "../../../../assets/SVGs/truck.svg";
 import productService from "../../../../services/product";
+import cartService from "../../../../services/reservation"; // Import the cart service
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 interface Product {
   _id: string;
@@ -53,6 +55,27 @@ const Detailmain: React.FC = () => {
 
   const toggleFavorite = () => {
     setIsFavorite((prev) => !prev);
+  };
+
+  const addToCartHandler = async () => {
+    if (!product) return;
+
+    try {
+      const data = {
+        productId: product._id,
+        quantity: 1, // You can add quantity selection here if needed
+      };
+
+      const response = await cartService.addToCart(data);
+
+      // Show SweetAlert2 success message
+      Swal.fire("Success!", "Product added to cart successfully!", "success");
+      console.log(response.data.message);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      // Show SweetAlert2 error message if there is an issue
+      Swal.fire("Error", "Failed to add product to cart", "error");
+    }
   };
 
   if (loading) {
@@ -153,7 +176,9 @@ const Detailmain: React.FC = () => {
         <div className={style.DetPrice}>
           <h3>${product.price.toFixed(2)}</h3>
           <button className={style.Buy}>Buy It Now</button>
-          <button className={style.ToCart}>Add To Cart</button>
+          <button className={style.ToCart} onClick={addToCartHandler}>
+            Add To Cart
+          </button>
         </div>
       </div>
     </div>

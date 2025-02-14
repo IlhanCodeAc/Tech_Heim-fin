@@ -2,7 +2,7 @@ import { Router } from "express";
 import reviewController from "../controllers/review";
 import { authorize } from "../middlewares/user";
 import validateSchema from "../middlewares/validator";
-import { changeStatusSchema, createReviewSchema } from "../validation/review";
+import {  createReviewSchema } from "../validation/review";
 
 const router = Router();
 
@@ -17,11 +17,11 @@ router.post(
   reviewController.create
 );
 
-router.patch(
-  "/:id/change-status",
-  authorize({ isAdmin: true }),
-  validateSchema(changeStatusSchema),
-  reviewController.changeStatus
-);
+// router.patch(
+//   "/:id/change-status",
+//   authorize({ isAdmin: true }),
+//   validateSchema(changeStatusSchema),
+//   reviewController.changeStatus
+// );
 
 export default router;

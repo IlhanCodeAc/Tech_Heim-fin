@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Review from "../mongoose/schemas/review";
-import Reservation from "../mongoose/schemas/reservation";
+import Reservation from "../mongoose/schemas/cart";
 import Rent from "../mongoose/schemas/products";
 
 const getAll = async (req: Request, res: Response) => {

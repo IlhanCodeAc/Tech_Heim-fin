@@ -1,23 +1,40 @@
-import { Reservation, ReservationStatus } from "@/types";
+import { CartItem, Product } from "../../types"; // Import CartItem type
 
-export type CreateReservationRequestPayload = {
-  billingPhoneNumber: string;
-  billingAddress: string;
-  billingTownCity: string;
-  billingName: string;
-  startDate: string;
-  endDate: string;
-  dropOffLocation: string;
-  pickUpLocation: string;
-  rentId: string;
+// Add Product to Cart
+export type AddToCartRequestPayload = {
+  product: Product; // Full product details
+  quantity: number; // Quantity of the product
+  productId:string;
+
 };
 
-export type CreateReservationResponseType = {
-  item?: Reservation;
+export type AddToCartResponseType = {
+  message: string; 
+  productId:string;
+  cart: {
+    items: CartItem[]; 
+    total: number; 
+  };
+};
+
+export type RemoveFromCartRequestPayload = {
+  productId: string;
+};
+
+export type RemoveFromCartResponseType = {
+  message: string;
+  cart: {
+    items: CartItem[]; 
+    total: number;
+  };
+};
+
+export type ClearCartResponseType = {
   message: string;
 };
 
-export type ChangeStatusRequestPayload = {
-  id: string;
-  status: ReservationStatus.Approved | ReservationStatus.Rejected;
+export type GetCartResponseType = {
+  message: string; 
+  items: CartItem[];
+  total: number; 
 };
