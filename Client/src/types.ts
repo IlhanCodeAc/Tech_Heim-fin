@@ -114,6 +114,19 @@ export type Review = {
   _id: string;
 };
 
+export type Wishlist = {
+  _id: string;
+  user: User;
+  items: WishlistItem[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type WishlistItem = {
+  product: Product;
+  _id: string;
+};
+
 export type Conversation = {
   _id: string;
   userName: string;

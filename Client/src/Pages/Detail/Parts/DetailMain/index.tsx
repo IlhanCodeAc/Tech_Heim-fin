@@ -5,8 +5,9 @@ import style from "./style.module.css";
 import Verify from "../../../../assets/SVGs/verify.svg";
 import Delivery from "../../../../assets/SVGs/truck.svg";
 import productService from "../../../../services/product";
-import cartService from "../../../../services/reservation"; // Import the cart service
-import Swal from "sweetalert2"; // Import SweetAlert2
+import cartService from "../../../../services/reservation";
+import wishlistService from "../../../../services/wishlist"; // Import wishlist service
+import Swal from "sweetalert2";
 
 interface Product {
   _id: string;
@@ -27,7 +28,7 @@ const Detailmain: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [mainImage, setMainImage] = useState<string>("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -36,13 +37,12 @@ const Detailmain: React.FC = () => {
       try {
         const response = await productService.getById(id);
         const fetchedProduct: Product = response.data.item;
-        console.log(fetchedProduct);
         setProduct(fetchedProduct);
         setMainImage(fetchedProduct.images?.[0] || "");
       } catch (error) {
         console.error("Error fetching product details:", error);
       } finally {
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false);
       }
     };
 
@@ -53,9 +53,27 @@ const Detailmain: React.FC = () => {
     setMainImage(img);
   };
 
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
+  const toggleFavorite = async () => {
+    if (!product) return;
+  
+    try {
+      if (!isFavorite) {
+        const response = await wishlistService.addToWishlist({ productId: product._id });
+        console.log("Added to wishlist:", response.data);
+        Swal.fire("Success!", "Product added to wishlist!", "success");
+        setIsFavorite(true); // Set state AFTER successful API response
+      } else {
+        const response = await wishlistService.removeFromWishlist({ productId: product._id });
+        console.log("Removed from wishlist:", response.data);
+        Swal.fire("Removed", "Product removed from wishlist", "info");
+        setIsFavorite(false);
+      }
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
+      Swal.fire("Error", "Failed to update wishlist", "error");
+    }
   };
+  
 
   const addToCartHandler = async () => {
     if (!product) return;
@@ -63,28 +81,19 @@ const Detailmain: React.FC = () => {
     try {
       const data = {
         productId: product._id,
-        quantity: 1, // You can add quantity selection here if needed
+        quantity: 1, 
       };
 
-      const response = await cartService.addToCart(data);
-
-      // Show SweetAlert2 success message
-      Swal.fire("Success!", "Product added to cart successfully!", "success");
-      console.log(response.data.message);
+      await cartService.addToCart(data);
+      Swal.fire("Success!", "Product added to cart!", "success");
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      // Show SweetAlert2 error message if there is an issue
       Swal.fire("Error", "Failed to add product to cart", "error");
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>; // Display loading message while fetching data
-  }
-
-  if (!product) {
-    return <div>Product not found</div>; // Handle case when product is not found
-  }
+  if (loading) return <div>Loading...</div>;
+  if (!product) return <div>Product not found</div>;
 
   return (
     <div>
