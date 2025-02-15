@@ -8,6 +8,8 @@ import ProductTable from "../../DashboardPages/ProductsTable";
 import PersonalData from "../../DashboardPages/PersonalData";
 import Wishlist from "../../DashboardPages/Wishlist";
 import { useNavigate } from "react-router-dom";
+import ChatPage from "../../DashboardPages/OrdersUse";
+import AdminChat from "../../DashboardPages/OrdersUse";
 
 interface SidebarProps {
   setSelectedPage: (page: string) => void;
@@ -120,7 +122,7 @@ const Content: React.FC<ContentProps> = ({ selectedPage }) => {
   return (
     <div className="p-5">
       {selectedPage === "personal-data" && <PersonalData />}
-      {selectedPage === "orders" && <AdminTable />}
+      {selectedPage === "orders" && <AdminChat />}
       {selectedPage === "products" && <ProductTable />}
       {selectedPage === "wishlist" && <Wishlist />}
       {selectedPage === "contact" && <h2>Contact Us Page</h2>}

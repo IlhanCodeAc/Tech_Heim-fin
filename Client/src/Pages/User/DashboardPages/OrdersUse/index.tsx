@@ -1,109 +1,114 @@
-import React from "react";
+import React, { useState } from "react";
+import { Input } from "../../../../Components/components/ui/input";
+import { Button } from "../../../../Components/components/ui/button";
 
-interface CartItem {
+interface User {
   id: number;
-  image: string;
   name: string;
-  details: string;
-  price: string;
-  status: "Pending" | "Shipped" | "Delivered";
+  avatar: string;
+  lastMessage: string;
 }
 
-const cartData: CartItem[] = [
-  {
-    id: 1,
-    image: "/path/to/image1.jpg",
-    name: "Product 1",
-    details: "Description of product 1",
-    price: "$120",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    image: "/path/to/image2.jpg",
-    name: "Product 2",
-    details: "Description of product 2",
-    price: "$85",
-    status: "Shipped",
-  },
-  {
-    id: 3,
-    image: "/path/to/image3.jpg",
-    name: "Product 3",
-    details: "Description of product 3",
-    price: "$150",
-    status: "Delivered",
-  },
+interface Message {
+  id: number;
+  sender: "user" | "me";
+  content: string;
+}
+
+const users: User[] = [
+  { id: 1, name: "John Doe", avatar: "/avatar1.jpg", lastMessage: "Hey there!" },
+  { id: 2, name: "Jane Smith", avatar: "/avatar2.jpg", lastMessage: "Let's meet up." },
+  { id: 3, name: "Alice Brown", avatar: "/avatar3.jpg", lastMessage: "Got it, thanks!" },
 ];
 
-const UserTable: React.FC = () => {
+const ChatPage: React.FC = () => {
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+
+  const handleUserSelect = (user: User) => {
+    setSelectedUser(user);
+    setMessages([
+      { id: 1, sender: "user", content: user.lastMessage },
+      { id: 2, sender: "me", content: "Hello!" },
+    ]);
+  };
+
+  const sendMessage = () => {
+    if (!input.trim()) return;
+    setMessages([...messages, { id: messages.length + 1, sender: "me", content: input }]);
+    setInput("");
+  };
+
   return (
-    <div className="border border-[#F6F6F6] bg-[#F9F9F9] rounded-lg p-5 w-full overflow-hidden">
-      <h2 className="text-xl font-bold mb-4">User Overview</h2>
-      <div className="w-full overflow-x-auto">
-        <table className="w-full border-collapse min-w-[600px] md:table hidden">
-          <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="p-3">Product</th>
-              <th className="p-3">Cart Details</th>
-              <th className="p-3">Total Price</th>
-              <th className="p-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cartData.map((item) => (
-              <tr key={item.id} className="border-t">
-                <td className="p-3 flex items-center gap-3 min-w-[150px]">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-12 h-12 object-cover rounded-md"
-                  />
-                  <span className="truncate">{item.name}</span>
-                </td>
-                <td className="p-3 min-w-[200px] truncate">{item.details}</td>
-                <td className="p-3 font-semibold min-w-[100px]">{item.price}</td>
-                <td className="p-3 min-w-[120px]">
-                  <span
-                    className={`px-2 py-1 rounded-md text-sm font-medium 
-                      ${item.status === "Pending" ? "text-yellow-600 bg-yellow-100" : ""} 
-                      ${item.status === "Shipped" ? "text-blue-600 bg-blue-100" : ""} 
-                      ${item.status === "Delivered" ? "text-green-600 bg-green-100" : ""}`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="md:hidden flex flex-col gap-4">
-          {cartData.map((item) => (
-            <div key={item.id} className="border p-3 rounded-lg bg-white">
-              <div className="flex items-center gap-3">
-                <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
-                <div>
-                  <h3 className="font-semibold">{item.name}</h3>
-                  <p className="text-sm text-gray-600">{item.details}</p>
-                </div>
-              </div>
-              <div className="flex justify-between mt-2">
-                <span className="font-semibold">{item.price}</span>
-                <span
-                  className={`px-2 py-1 rounded-md text-sm font-medium 
-                    ${item.status === "Pending" ? "text-yellow-600 bg-yellow-100" : ""} 
-                    ${item.status === "Shipped" ? "text-blue-600 bg-blue-100" : ""} 
-                    ${item.status === "Delivered" ? "text-green-600 bg-green-100" : ""}`}
-                >
-                  {item.status}
-                </span>
+    <div className="flex h-screen bg-gray-100">
+      {/* Users List */}
+      <div className="w-1/4 bg-white p-4 border-r overflow-y-auto">
+        <h2 className="text-lg font-bold mb-4">Chats</h2>
+        <div className="space-y-3">
+          {users.map((user) => (
+            <div
+              key={user.id}
+              className={`flex items-center gap-3 p-3 rounded-md cursor-pointer hover:bg-gray-200 ${
+                selectedUser?.id === user.id ? "bg-gray-300" : ""
+              }`}
+              onClick={() => handleUserSelect(user)}
+            >
+              <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
+              <div>
+                <p className="font-medium">{user.name}</p>
+                <p className="text-sm text-gray-500 truncate w-40">{user.lastMessage}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Chat Area */}
+      <div className="w-3/4 flex flex-col">
+        {selectedUser ? (
+          <>
+            {/* Chat Header */}
+            <div className="p-4 bg-white border-b flex items-center gap-3">
+              <img src={selectedUser.avatar} alt={selectedUser.name} className="w-10 h-10 rounded-full" />
+              <p className="font-medium text-lg">{selectedUser.name}</p>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-2">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`max-w-xs p-3 rounded-lg ${
+                    msg.sender === "me" ? "bg-blue-500 text-white self-end" : "bg-gray-200 text-black self-start" 
+                  }`}
+                >
+                  {msg.content}
+                </div>
+              ))}
+            </div>
+
+            {/* Message Input */}
+            <div className="p-4 border-t bg-white flex items-center gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="flex-1"
+                placeholder="Type a message..."
+              />
+              <Button onClick={sendMessage} className="bg-blue-500 text-white">
+                Send
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-gray-500">
+            Select a chat to start messaging
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default UserTable;
+export default ChatPage;

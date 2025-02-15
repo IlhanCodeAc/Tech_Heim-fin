@@ -18,6 +18,16 @@ const changeStatus = async (data: ChangeStatusRequestPayload) => {
   });
 };
 
-const reviewService = { create, getAll, changeStatus };
+const getByProductId = async (ProductId: string) => {
+  try {
+    const response = await axiosInstance.get(`/review/${ProductId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching reviews by product ID", error);
+    throw error;
+  }
+};
+
+const reviewService = { create, getAll, changeStatus, getByProductId };
 
 export default reviewService;

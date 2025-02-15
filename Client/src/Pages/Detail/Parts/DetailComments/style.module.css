@@ -71,6 +71,7 @@
         overflow: auto;
         display: flex;
         width: 600px;
+        gap: 10px;
         /* height: 900px; */
         overflow: auto;
         flex-direction: column;

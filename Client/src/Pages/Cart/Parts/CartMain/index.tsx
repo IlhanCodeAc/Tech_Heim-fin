@@ -32,7 +32,7 @@ const CartMain = () => {
               name: product.name || "Unknown Product",
               price: item.price || 0,
               image: product.images && product.images.length 
-                ? `/product/${product.images[0]}`  // Adjust this path based on your API response
+                ? `http://localhost:3000/public/product/${product.images[0]}`  // Adjust this path based on your API response
                 : "https://via.placeholder.com/150",
             };
           });
@@ -100,6 +100,8 @@ const CartMain = () => {
       console.error("Error removing item:", (error as any).response?.data || error);
     }
   };
+
+  console.log(cartItems)
   
 
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
@@ -113,7 +115,7 @@ const CartMain = () => {
               cartItems.map((item) => (
                 <div key={item.productId} className={style.CartCard}>
                   <div className={style.CardLeft}>
-                  <img src={item.product.images[0]} alt={item.name} />
+                  <img src={item.image} alt={item.name} />
 
 
                   </div>

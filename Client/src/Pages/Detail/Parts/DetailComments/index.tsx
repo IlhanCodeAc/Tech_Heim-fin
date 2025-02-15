@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import style from "./style.module.css";
-import HalfRating from "./stars"; // Ensure this works correctly
+import HalfRating from "./stars"; 
 import user from "../../../../assets/SVGs/user.svg";
 import { Star } from "lucide-react";
 import reviewService from "../../../../services/review";
@@ -9,19 +9,20 @@ import reviewService from "../../../../services/review";
 
 
 const Comments = () => {
-  const { productId } = useParams<{ productId: string }>(); // Ensure productId is correctly typed
+  const { id } = useParams<{ id: string }>();
+
   const [comments, setComments] = useState<any[]>([]);
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(5);
 
   useEffect(() => {
-    if (productId) fetchComments();
-  }, [productId]);
+    if (id) fetchComments();
+  }, [id]);
 
   const fetchComments = async () => {
     try {
-      const response = await reviewService.getAll();
-      setComments(response.data.items || []);
+      const response = await reviewService.getByProductId(id as string);
+      setComments(response.items || []); 
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
@@ -29,17 +30,17 @@ const Comments = () => {
 
   const handleSubmit = async () => {
     if (!content.trim()) return console.error("Content cannot be empty.");
-    if (!productId) return console.error("Product ID is missing.");
-
+    if (!id) return console.error("Product ID is missing.");
+    console.log(id)
     try {
       await reviewService.create({
-        productId,
+        productId:id,
         content,
         rating,
       });
       setContent("");
-      setRating(5); // Reset rating after submission
-      fetchComments(); // Refresh comments
+      setRating(5); 
+      fetchComments(); 
     } catch (error: any) {
       console.error("Error submitting comment:", error?.response?.data || error);
     }
@@ -58,7 +59,7 @@ const Comments = () => {
         />
         <div className={style.Commenting}>
           <button onClick={handleSubmit}>Comment</button>
-          <HalfRating setRating={setRating} /> {/* Ensure this component works correctly */}
+          <HalfRating setRating={setRating} /> 
         </div>
       </div>
       <div className={style.Right}>

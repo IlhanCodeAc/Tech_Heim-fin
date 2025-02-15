@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import Review from "../mongoose/schemas/review";
 import Reservation from "../mongoose/schemas/cart";
 import Rent from "../mongoose/schemas/products";
+import products from "../mongoose/schemas/products";
 
 const getAll = async (req: Request, res: Response) => {
   try {
-    const reviews = await Review.find().populate("author").populate("rent");
+    const reviews = await Review.find({}).populate("author").populate("rent");
 
     res.status(200).json({
       message: "Reviews fetched successfully",
@@ -17,42 +18,28 @@ const getAll = async (req: Request, res: Response) => {
   }
 };
 
-const create = async (req: Request, res: Response) => {
+
+const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = req.user;
-    const { reservationId, productId, content, rating } = req.matchedData;
+    const { productId, content, rating } = req.matchedData;
 
-    const reservation = await Reservation.findById(reservationId);
+    const product = await products.findById(productId);
 
-    // if (!reservation) {
-    //   res.status(404).json({ message: "Reservation not found" });
-    //   return;
-    // }
-
-    // if (reservation.hasReview) {
-    //   res.status(400).json({ message: "Reservation already has a review" });
-    //   return;
-    // }
-
-    const rent = await Rent.findById(productId);
-
-    if (!rent) {
-      res.status(404).json({ message: "Rent not found" });
+    if (!product) {
+      res.status(404).json({ message: "Product not found" });
       return;
     }
 
     const review = await Review.create({
       author: user!._id,
-      rent: productId,
+      product: productId,
       content,
       rating,
     });
 
-    // reservation.hasReview = true;
-    // await reservation.save();
-
-    rent.reviews.push(review._id);
-    await rent.save();
+    product.reviews.push(review._id); 
+    await product.save();
 
     res.status(201).json({
       message: "Review created successfully",
@@ -64,38 +51,40 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const changeStatus = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.matchedData;
 
-    const review = await Review.findById(id);
 
-    if (!review) {
-      res.status(404).json({ message: "Review not found" });
-      return;
-    }
 
-    review.status = status;
-    await review.save();
+// const changeStatus = async (req: Request, res: Response) => {
+//   try {
+//     const { id } = req.params;
+//     const { status } = req.matchedData;
 
-    res.status(200).json({
-      message: "Review status updated successfully",
-      review,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+//     const review = await Review.findById(id);
+
+//     if (!review) {
+//       res.status(404).json({ message: "Review not found" });
+//       return;
+//     }
+
+//     review.status = status;
+//     await review.save();
+
+//     res.status(200).json({
+//       message: "Review status updated successfully",
+//       review,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
 
 const getByProductId = async (req: Request, res: Response) => {
   try {
-    const { ProductId } = req.params;
-
+    const { productId } = req.params;
+    
     const reviews = await Review.find({
-      rent: ProductId,
-      status: "approved",
+      product: productId,
     }).populate("author");
 
     res.status(200).json({
@@ -111,6 +100,6 @@ const getByProductId = async (req: Request, res: Response) => {
 export default {
   getAll,
   create,
-  changeStatus,
+  // changeStatus,
   getByProductId,
 };

@@ -4,6 +4,7 @@ import style from "./style.module.css";
 import { Product } from "../../../../types";
 import { fetchFilteredProducts } from "../../../../filterUtil";
 import { Search } from "lucide-react";
+import UserChatDialog from "./userChat";
 
 const Prods = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,6 +12,10 @@ const Prods = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  
+  // Assuming you fetch or define the userId and conversationId here
+  const [userId, setUserId] = useState<string>("user123");  // Set default userId or fetch from context or API
+  const [conversationId, setConversationId] = useState<string>("conv456");  // Set default conversationId or fetch
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -91,6 +96,7 @@ const Prods = () => {
           ))}
         </div>
       )}
+      <UserChatDialog userId={userId} conversationId={conversationId} />
     </div>
   );
 };

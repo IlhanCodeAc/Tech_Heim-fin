@@ -14,13 +14,13 @@ const ProductTable: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); // State to control ProductDialog visibility
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); 
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await productService.getAll();
-        setProducts(response.data.items); // Assuming 'items' holds the products
+        setProducts(response.data.items); 
       } catch (err) {
         setError("Failed to fetch products.");
       } finally {
@@ -50,11 +50,11 @@ const ProductTable: React.FC = () => {
   };
 
   const openDialog = () => {
-    setIsDialogOpen(true); // Open the dialog when creating a new product
+    setIsDialogOpen(true); 
   };
 
   const closeDialog = () => {
-    setIsDialogOpen(false); // Close the dialog
+    setIsDialogOpen(false); 
   };
 
   if (loading) return <p>Loading products...</p>;
@@ -66,9 +66,7 @@ const ProductTable: React.FC = () => {
       <div className="w-full overflow-x-auto">
         <div className="flex justify-between mb-4">
         <div className="flex justify-between mb-4">
-  <button onClick={openDialog} className="px-4 py-2 bg-blue-500 text-white rounded-md">
-    Create Product
-  </button>
+ 
   <ProductCreateDialog open={isDialogOpen} onClose={closeDialog} />
 </div>
 
