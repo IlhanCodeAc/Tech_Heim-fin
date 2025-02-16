@@ -1,4 +1,4 @@
-import { User } from "../../types";
+import { User } from "../types";
 import { clsx, type ClassValue } from "clsx";
 import moment from "moment";
 import { twMerge } from "tailwind-merge";

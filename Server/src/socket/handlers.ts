@@ -8,9 +8,7 @@ export function socketHandlers(
   socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 ) {
   socket.on("register", (userId: string) => onRegister(userId, socket));
-
   socket.on("message", async (data) => await onMessage(data, socket));
-
   socket.on("disconnect", () => onDisconnect(socket));
 }
 
@@ -21,35 +19,34 @@ function onRegister(userId: string, socket: Socket) {
 }
 
 async function onMessage(
-  { message, to, from }: { message: string; to: string; from: string },
+  { message, to, from, userName }: { message: string; to: string; from: string; userName: string },
   socket: Socket
 ) {
   try {
     const receiverSocketId = socketUsers[to];
     console.log("Sending message from:", from, "to:", to, "Socket ID:", receiverSocketId);
 
-    // Ensure the conversation exists between the two users
     let conversation = await Conversation.findOne({
       $or: [
         { userId: from, receiverId: to },
         { userId: to, receiverId: from },
       ],
-    });
+    }).populate("messages");
 
     if (!conversation) {
-      // If no conversation exists, create a new one
       conversation = await Conversation.create({
         userId: from,
         receiverId: to,
+        userName: userName,
+        userEmail: "placeholder@email.com",
         messages: [],
       });
     }
 
-    // Create and save the message
     const messageItem = await Message.create({
       text: message,
       userId: from,
-      userName: conversation.userName,
+      userName: userName,
       conversation: conversation._id,
     });
 
@@ -58,9 +55,7 @@ async function onMessage(
 
     console.log("Saved Message:", messageItem);
 
-    // Emit the message to both sender and receiver
     socket.emit("message", messageItem); // Send to sender
-
     if (receiverSocketId) {
       socket.to(receiverSocketId).emit("message", messageItem); // Send to receiver
     } else {

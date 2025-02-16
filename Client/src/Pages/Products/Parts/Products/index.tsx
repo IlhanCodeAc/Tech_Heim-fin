@@ -5,6 +5,7 @@ import { Product } from "../../../../types";
 import { fetchFilteredProducts } from "../../../../filterUtil";
 import { Search } from "lucide-react";
 import UserChatDialog from "./userChat";
+import { HelpPopover } from "../../../../Components/help-popover";
 
 const Prods = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -96,7 +97,7 @@ const Prods = () => {
           ))}
         </div>
       )}
-      <UserChatDialog userId={userId} conversationId={conversationId} />
+      <HelpPopover/>
     </div>
   );
 };

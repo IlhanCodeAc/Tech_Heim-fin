@@ -2,6 +2,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    z-index: 1;
     .Left{
         padding-top: 18px;
         padding-bottom: 18px;
