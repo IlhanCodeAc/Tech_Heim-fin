@@ -12,6 +12,7 @@
         gap: 10px;
         border-radius: 8px;
         background: var(--White, #FFF);
+        transition: 0.3s;
         
         /* shadow 1 */
         box-shadow: -2px 2px 15px -1px rgba(113, 113, 113, 0.12);
@@ -25,5 +26,8 @@
             font-weight: 600;
             line-height: 24px; /* 150% */
         }
+    }
+    .Category:hover{
+        scale: 1.05;
     }
 }

@@ -1,6 +1,7 @@
 import  { useState, useEffect } from "react";
 import style from "./style.module.css";
 import Phones from "../../../../assets/Images/image 187.png";
+import { Link } from "react-router-dom";
 
 const Timedeal = () => {
   const targetTime = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
@@ -39,6 +40,7 @@ const Timedeal = () => {
   }, []);
 
   return (
+    <Link to="/products?search=Iphone+16">
     <div className={style.TimeCont}>
       <div className={style.TimeContainer}>
         <div className={style.Left}>
@@ -77,6 +79,7 @@ const Timedeal = () => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 
