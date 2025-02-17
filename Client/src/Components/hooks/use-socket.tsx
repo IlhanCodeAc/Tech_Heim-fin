@@ -12,7 +12,7 @@ export const useSocket = () => {
     if (loading) return;
     const id = getUserId(user);
 
-    const newSocket = io(import.meta.env.VITE_APP_API_BASE_URL, {
+    const newSocket = io("http://localhost:3000", {
       withCredentials: true,
     });
 

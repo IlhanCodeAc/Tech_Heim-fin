@@ -32,7 +32,7 @@ export const HelpPopover = () => {
     createdAt: string;
   }[]>([]);
 
-  const isLoading = !conversationData; // Set loading state based on conversation data
+  const isLoading = !conversationData; 
 
   useEffect(() => {
     const userId = getStoredUserId();
@@ -73,6 +73,7 @@ export const HelpPopover = () => {
   }, [messages, isOpen]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    
     if (!socket || !userId) return;
     e.preventDefault();
     const message = inputRef.current?.value.trim();
@@ -80,14 +81,15 @@ export const HelpPopover = () => {
     inputRef.current!.value = "";
     socket.emit("message", {
       message,
-      to: "67af9837b1b8fe6d459c9f68", // Admin ID or other recipient
+      to: "67af9837b1b8fe6d459c9f68", 
       from: userId,
     });
     setMessages((prev) => [
       ...prev,
       { text: message, userId, createdAt: new Date().toISOString() },
     ]);
-  };
+
+    };
 
   const handleStartConversation = async () => {
     if (!userId) return;
