@@ -22,6 +22,8 @@ import reviewRoutes from "./routes/review";
 import conversationRoutes from "./routes/conversation";
 import cartRoutes from "./routes/cart"
 import wishlistRoutes from "./routes/wishlist"
+import checkoutRoutes from "./routes/checkout"
+import webhookRoute from "./routes/webhook"
 
 import { connectSocket } from "./socket";
 import "./auth/local-strategy";
@@ -40,6 +42,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173",
+    methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
 );
@@ -60,6 +63,8 @@ app.use(passport.session());
 app.use("/public", express.static(path.join(__dirname, "../public")));
 
 app.use("/auth", authRoutes);
+app.use("/checkout", checkoutRoutes);
+app.use("/webhook", webhookRoute)
 app.use("/cart", cartRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/category", categoryRoutes);

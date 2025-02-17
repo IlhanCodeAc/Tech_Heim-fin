@@ -3,7 +3,11 @@ import style from "./style.module.css";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import cartService from "../../../../services/reservation";
 import swal from "sweetalert2";
+import stripeService from "../../../../services/stripe"; 
 import { Product } from "../../../../types";
+import getStripe from "../../../../Components/utils/stripe";
+import queryClient from "../../../../config/queryClient";
+import { toast } from "sonner";
 
 interface CartItem {
   _id: string;
@@ -15,6 +19,8 @@ interface CartItem {
   quantity: number;
 }
 
+
+
 const CartMain = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
@@ -25,18 +31,18 @@ const CartMain = () => {
         console.log("Fetched cart data:", cartResponse.data.items);
 
         const populatedCart = cartResponse.data.items.map((item) => {
-            const product = item.product || {};
-            return {
-              ...item,
-              productId: product._id || item._id,
-              name: product.name || "Unknown Product",
-              price: item.price || 0,
-              image: product.images && product.images.length 
-                ? `http://localhost:3000/public/product/${product.images[0]}`  // Adjust this path based on your API response
-                : "https://via.placeholder.com/150",
-            };
-          });
-          
+          const product = item.product || {};
+          return {
+            ...item,
+            productId: product._id || item._id,
+            name: product.name || "Unknown Product",
+            price: item.price || 0,
+            image: product.images && product.images.length
+              ? `http://localhost:3000/public/product/${product.images[0]}`
+              : "https://via.placeholder.com/150", 
+          };
+        });
+
         setCartItems(populatedCart);
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -46,7 +52,7 @@ const CartMain = () => {
     fetchCart();
   }, []);
 
-  const handleIncrease = async (productId: string) => { 
+  const handleIncrease = async (productId: string) => {
     try {
       const response = await cartService.addToCart({ productId, quantity: 1 });
       if (response.data) {
@@ -60,12 +66,12 @@ const CartMain = () => {
       console.error("Error increasing quantity:", error.response?.data || error);
     }
   };
-  
+
   const handleDecrease = async (productId: string) => {
     try {
       const item = cartItems.find((item) => item.productId === productId);
       if (!item || item.quantity <= 1) return;
-  
+
       const response = await cartService.addToCart({ productId, quantity: -1 });
       if (response.data) {
         setCartItems((prevCart) =>
@@ -73,24 +79,20 @@ const CartMain = () => {
             .map((item) =>
               item.productId === productId ? { ...item, quantity: item.quantity - 1 } : item
             )
-            .filter((item) => item.quantity > 0) // Remove items with 0 quantity
+            .filter((item) => item.quantity > 0) 
         );
       }
     } catch (error) {
       console.error("Error decreasing quantity:", error.response?.data || error);
     }
   };
-  
-  
-  
-  
 
   const handleRemove = async (id: string) => {
     console.log("Removing item with ID:", id);
     try {
       const response = await cartService.removeFromCart({ productId: id });
       console.log("Remove Response:", response);
-  
+
       if (response.data) {
         setCartItems((prevCart) => prevCart.filter((item) => item.productId !== id));
         swal.fire("Removed!", "Item removed from cart.", "success");
@@ -101,10 +103,45 @@ const CartMain = () => {
     }
   };
 
-  console.log(cartItems)
-  
-
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
+
+  const handleCheckout = async () => {
+    try {
+        console.log("Basket before checkout:", cartItems);
+
+        const itemsForCheckout = cartItems.map(item => ({
+            productId: item.productId,
+            name: item.name,
+            price: item.price ?? 0,  // Ensure price is a valid number
+            quantity: item.quantity
+        }));
+
+        const response = await fetch(`http://localhost:3000/checkout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: itemsForCheckout }),
+        });
+
+        const data = await response.json();
+        console.log("Response from API:", data);
+
+        const { sessionId } = data;
+
+        const stripe = await getStripe();
+
+        if (stripe && sessionId) {
+            await stripe.redirectToCheckout({ sessionId });
+            setCartItems([]);
+        }
+    } catch (error) {
+        toast.error("Checkout error.");
+        console.error(error);
+    }
+};
+
+
+  
+  
 
   return (
     <div className="container">
@@ -115,9 +152,7 @@ const CartMain = () => {
               cartItems.map((item) => (
                 <div key={item.productId} className={style.CartCard}>
                   <div className={style.CardLeft}>
-                  <img src={item.image} alt={item.name} />
-
-
+                    <img src={item.image} alt={item.name} />
                   </div>
                   <div className={style.CardMid}>
                     <div className={style.MidTop}>
@@ -169,7 +204,9 @@ const CartMain = () => {
                 <p>Grand Total</p>
                 <p>${subtotal.toFixed(2)}</p>
               </div>
-              <button className={style.ToCheckout}>Proceed To Checkout</button>
+              <button className={style.ToCheckout} onClick={handleCheckout}>
+                Proceed To Checkout
+              </button>
             </div>
           </div>
         </div>
