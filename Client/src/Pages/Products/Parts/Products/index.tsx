@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import style from "./style.module.css";
 import { Product } from "../../../../types";
 import { fetchFilteredProducts } from "../../../../filterUtil";
@@ -41,6 +41,10 @@ const Prods = () => {
 
     fetchProducts();
   }, [searchParams]);
+  
+  const location = useLocation();
+
+  const isDashboardPage = location.pathname.includes(`/user`)
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -97,7 +101,7 @@ const Prods = () => {
           ))}
         </div>
       )}
-      <HelpPopover/>
+      {isDashboardPage && <HelpPopover/>}
     </div>
   );
 };

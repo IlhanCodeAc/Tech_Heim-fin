@@ -70,6 +70,7 @@ const ChatPage = () => {
   }, [socket]);
 
   useEffect(() => {
+    console.log(socket)
     if (wrapperRef.current) {
       console.log(wrapperRef.current.scrollHeight);
       wrapperRef.current.scrollTo({

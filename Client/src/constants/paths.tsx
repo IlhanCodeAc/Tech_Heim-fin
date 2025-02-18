@@ -5,7 +5,7 @@ export const paths = {
   PAYMENT: (id = ":id") => `/payment/${id}`,
   RESERVATIONS: "/reservations",
   DASHBOARD: {
-    MAIN: "/dashboard",
+    MAIN:(id = ":id")=> `/user/${id}`,
     RENTS: {
       LIST: "/dashboard/rents",
       CREATE: "/dashboard/rents/create",
@@ -18,8 +18,8 @@ export const paths = {
       LIST: "/dashboard/reviews",
     },
     CHAT: {
-      VIEW: "/dashboard/chat",
-      USER: (id = ":id") => `/dashboard/chat/${id}`,
+      VIEW: "/user/chat",
+      USER: (id = ":id") => `/user/chat/${id}`,
     },
   },
 };

@@ -112,7 +112,7 @@ const CartMain = () => {
         const itemsForCheckout = cartItems.map(item => ({
             productId: item.productId,
             name: item.name,
-            price: item.price ?? 0,  // Ensure price is a valid number
+            price: item.price ?? 0,  
             quantity: item.quantity
         }));
 
@@ -126,18 +126,24 @@ const CartMain = () => {
         console.log("Response from API:", data);
 
         const { sessionId } = data;
-
         const stripe = await getStripe();
 
         if (stripe && sessionId) {
+            try {
+                await cartService.clearCart(); // Clear cart from backend
+                setCartItems([]); // Clear cart in UI
+            } catch (error) {
+                console.error("Failed to clear cart:", error.response?.data || error);
+            }
             await stripe.redirectToCheckout({ sessionId });
-            setCartItems([]);
         }
     } catch (error) {
         toast.error("Checkout error.");
         console.error(error);
     }
 };
+
+
 
 
   

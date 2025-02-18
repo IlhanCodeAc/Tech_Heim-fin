@@ -1,10 +1,11 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import authService from "../../../services/auth";
+import { Link } from "react-router-dom"; // Import Link for routing
 
 // Validation schema for Login
 const loginValidationSchema = Yup.object({
@@ -21,12 +22,12 @@ const LoginDialog = () => {
       return response.data;
     },
     onSuccess: (data) => {
-        console.log("Login Successful:", data);
-        localStorage.setItem("user", JSON.stringify(data.user)); // Store user
-        setIsOpen(false); // Close modal
-        window.location.reload(); // Refresh to reflect auth state
-      },
-      
+      console.log("Login Successful:", data);
+      localStorage.setItem("user", JSON.stringify(data.user)); // Store user
+      setIsOpen(false); // Close modal
+      window.location.reload(); // Refresh to reflect auth state
+    },
+
     onError: (error: any) => {
       console.error("Login Failed:", error.response?.data || error.message);
     },
@@ -64,6 +65,14 @@ const LoginDialog = () => {
               <Button type="submit" className="bg-blue-500 text-white" disabled={isSubmitting || mutation.isPending}>
                 {mutation.isPending ? "Logging in..." : "Login"}
               </Button>
+
+              {/* Forgot Password Link */}
+              <div className="text-center mt-2">
+                <Link to="/forgot-password" className="text-blue-500 hover:underline">
+                  Forgot password...
+                </Link>
+              </div>
+
               <Button type="button" className="bg-gray-500 text-white mt-2" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>

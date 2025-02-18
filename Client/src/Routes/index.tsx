@@ -1,6 +1,7 @@
 import MainLayout from '../Components/MainLayout';
 import Cart from '../Pages/Cart';
 import Detailpage from '../Pages/Detail';
+import ForgotPassword from '../Pages/ForgotPassword/forgotpassword';
 import Home from '../Pages/Home';
 import Productspage from '../Pages/Products';
 import UserPage from '../Pages/User';
@@ -18,7 +19,10 @@ export const ROUTES =[
             path:'products',
             element: <Productspage/>
         },
-        
+        {
+            path:'forgot-password',
+            element: <ForgotPassword/>
+        },
         {
             path:`products/${id}`,
             element:<Detailpage/>
