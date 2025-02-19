@@ -5,36 +5,40 @@ import ForgotPassword from '../Pages/ForgotPassword/forgotpassword';
 import Home from '../Pages/Home';
 import Productspage from '../Pages/Products';
 import UserPage from '../Pages/User';
-const id = ":id"
-export const ROUTES =[
+
+const id = ":id";
+const conversationId = ":conversationId";
+
+export const ROUTES = [
     {
-    element: <MainLayout/>,
-     path : '/',
-     children:[
-        {
-            index:true,
-            element:<Home/>
-        },
-        {
-            path:'products',
-            element: <Productspage/>
-        },
-        {
-            path:'forgot-password',
-            element: <ForgotPassword/>
-        },
-        {
-            path:`products/${id}`,
-            element:<Detailpage/>
-        },
-        {
-            path:`user/${id}/cart`,
-            element:<Cart/>
-        },
-        {
-            path:`user/${id}`,
-            element:<UserPage/>
-        }
-     ]
+        element: <MainLayout />,
+        path: '/',
+        children: [
+            {
+                index: true,
+                element: <Home />
+            },
+            {
+                path: 'products',
+                element: <Productspage />
+            },
+            {
+                path: 'forgot-password',
+                element: <ForgotPassword />
+            },
+            {
+                path: `products/${id}`,
+                element: <Detailpage />
+            },
+            {
+                path: `user/${id}/cart`,
+                element: <Cart />
+            },
+            {
+                path: `user/${id}`,
+                element: <UserPage />
+            },
+          
+        ]
     }
 ];
