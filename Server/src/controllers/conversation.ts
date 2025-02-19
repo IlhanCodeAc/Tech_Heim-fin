@@ -44,8 +44,6 @@ const getByUserId = async (req: Request, res: Response) => {
   }
 };
 
-
-
 const getById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -98,6 +96,8 @@ const create = async (req: Request, res: Response) => {
     res.status(500).send("Internal server error");
   }
 };
+
+
 
 export default {
   create,

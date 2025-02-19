@@ -1,79 +1,68 @@
 import { DefaultEventsMap, Socket } from "socket.io";
 import Message from "../mongoose/schemas/message";
+import User from "../mongoose/schemas/user";
 import Conversation from "../mongoose/schemas/conversation";
 
 const socketUsers: Record<string, string> = {};
-
 export function socketHandlers(
   socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 ) {
   socket.on("register", (userId: string) => onRegister(userId, socket));
-  socket.on("message", async (data) => await onMessage(data, socket));
+
+  socket.on("message", (data: { message: string; to: string; from: string }) =>
+    onMessage(data, socket)
+  );
+
   socket.on("disconnect", () => onDisconnect(socket));
 }
 
 function onRegister(userId: string, socket: Socket) {
   socketUsers[userId] = socket.id;
-  console.log("User registered:", userId, "Socket ID:", socket.id);
-  console.log("Connected Users:", socketUsers);
+  console.log("a user connected", userId, socket.id);
+  console.log("socketUsers", socketUsers);
 }
 
 async function onMessage(
-  { message, to, from, userName }: { message: string; to: string; from: string; userName: string },
+  { message, to, from }: { message: string; to: string; from: string },
   socket: Socket
 ) {
   try {
-    const receiverSocketId = socketUsers[to];
-    console.log("Sending message from:", from, "to:", to, "Socket ID:", receiverSocketId);
+    const socketId = socketUsers[to];
+    console.log("socketUsers", socketUsers);
+    console.log("to", to);
 
-    let conversation = await Conversation.findOne({
-      $or: [
-        { userId: from, receiverId: to },
-        { userId: to, receiverId: from },
-      ],
-    }).populate("messages");
+    const conversation = await Conversation.findOne({
+      $or: [{ userId: from }, { userId: to }],
+    });
 
-    if (!conversation) {
-      conversation = await Conversation.create({
-        userId: from,
-        receiverId: to,
-        userName: userName,
-        userEmail: "placeholder@email.com",
-        messages: [],
-      });
-    }
+    if (!conversation) return;
 
     const messageItem = await Message.create({
       text: message,
       userId: from,
-      userName: userName,
+      userName: conversation.userName,
       conversation: conversation._id,
     });
 
     conversation.messages.push(messageItem._id);
     await conversation.save();
 
-    console.log("Saved Message:", messageItem);
+    console.log("messageItem", messageItem);
+    console.log("socketId", socketId);
 
-    socket.emit("message", messageItem); // Send to sender
-    if (receiverSocketId) {
-      socket.to(receiverSocketId).emit("message", messageItem); // Send to receiver
-    } else {
-      console.log(`User ${to} is offline. Message stored.`);
+    if (socketId) {
+      socket.to(socketId).emit("message", messageItem);
     }
   } catch (e) {
-    console.error("Error in onMessage:", e);
+    console.log(e);
   }
 }
 
 function onDisconnect(socket: Socket) {
-  console.log("User disconnected:", socket.id);
-
-  Object.entries(socketUsers).forEach(([userId, socketId]) => {
-    if (socketId === socket.id) {
-      delete socketUsers[userId];
+  console.log("a user disconnected", socket.id);
+  Object.entries(socketUsers).forEach((item) => {
+    if (item[1] === socket.id) {
+      delete socketUsers[item[0]];
     }
   });
-
-  console.log("Updated Users:", socketUsers);
 }

@@ -101,7 +101,7 @@ const Prods = () => {
           ))}
         </div>
       )}
-      {isDashboardPage && <HelpPopover/>}
+      <HelpPopover/>
     </div>
   );
 };

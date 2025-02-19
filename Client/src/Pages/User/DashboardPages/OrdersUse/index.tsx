@@ -134,20 +134,21 @@ const ChatPage = () => {
             <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
               {conversations.map((conversation) => (
                 <Link
-                  key={conversation._id}
-                  to={paths.DASHBOARD.CHAT.USER(conversation._id)}
-                  className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-                  style={{
-                    backgroundColor: id === conversation._id ? "#f1f1f1" : "",
-                  }}
-                >
-                  <div className="flex uppercase items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                    {conversation.userName[0]}
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">
-                    {conversation.userName}
-                  </div>
-                </Link>
+                key={conversation._id}
+                to={`/user/${id}/chat/${conversation._id}`}
+                className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+                style={{
+                  backgroundColor: id === conversation._id ? "#f1f1f1" : "",
+                }}
+              >
+                <div className="flex uppercase items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+                  {conversation.userName[0]}
+                </div>
+                <div className="ml-2 text-sm font-semibold">
+                  {conversation.userName}
+                </div>
+              </Link>
+              
               ))}
             </div>
           </div>
