@@ -20,7 +20,7 @@ export const HelpPopover = () => {
     isLoading: conversationLoading,
     status,
   } = useQuery({
-    queryKey: ["USER_CONVERSATION"],
+    queryKey: ["userConversation"],
     queryFn: () => conversationService.getByUserId({ userId }),
     enabled: !!userId,
   });
@@ -41,6 +41,7 @@ export const HelpPopover = () => {
   }, []);
 
   useEffect(() => {
+    console.log(socket)
     if (!socket) return;
     socket.on("message", (message) => {
       setMessages((prev) => [...prev, message]);
@@ -70,9 +71,10 @@ export const HelpPopover = () => {
     }
   }, [messages, isOpen]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = () => {
+    console.log(socket,userId,"WEBS")
+
     if (!socket || !userId) return;
-    e.preventDefault();
     const message = inputRef.current?.value.trim();
     if (!message) return;
     inputRef.current!.value = "";
@@ -132,13 +134,16 @@ console.log(userId)
                 ))}
               </div>
               <div className="flex items-center pt-0">
-                <form onSubmit={handleSubmit} className="flex w-full space-x-2">
+                <form onSubmit={(e:any)=>{
+                  e.preventDefault()
+                  handleSubmit()
+                }} className="flex w-full space-x-2">
                   <input
                     ref={inputRef}
                     className="h-10 w-full rounded-md border px-3 py-2 text-sm"
                     placeholder="Type your message"
                   />
-                  <button className="h-10 px-4 py-2 bg-black text-white rounded-md">
+                  <button type="submit" className="h-10 px-4 py-2 bg-black text-white rounded-md">
                     Send
                   </button>
                 </form>

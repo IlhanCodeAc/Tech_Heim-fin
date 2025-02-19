@@ -9,7 +9,8 @@ export const useSocket = () => {
   const { user, loading } = useSelector(selectUserData);
 
   useEffect(() => {
-    if (loading) return;
+
+    if (!loading) return;
     const id = getUserId(user);
 
     const newSocket = io("http://localhost:3000", {
