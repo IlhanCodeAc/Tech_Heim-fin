@@ -79,7 +79,7 @@ const forgotPassword = async (req: Request, res: Response) => {
     user.resetPasswordTokenExpires = new Date(Date.now() + 3600000);
     await user.save();
     transporter.sendMail({
-      from: '"Authentication 👻" <dadasovsuleyman126@gmail.com>', // sender address
+      from: '"Authentication 👻" <ilhanma@code.edu.az>', // sender address
       to: email, // list of receivers
       subject: "Reset Your Password", // Subject line
       html: `
@@ -102,27 +102,29 @@ const forgotPassword = async (req: Request, res: Response) => {
 };
 
 const resetPassword = async (req: Request, res: Response) => {
-  const { token, password } = req.body;
+    console.log(req.body);
 
-  const user = await User.findOne({
-    resetPasswordToken: token,
-    resetPasswordTokenExpires: { $gt: Date.now() },
-  });
+    const { token, password } = req.body;
 
-  if (!user) {
-    res.status(400).json({ message: "Invalid or expired token" });
-    return;
-  }
+    const user = await User.findOne({
+        resetPasswordToken: token,
+        resetPasswordTokenExpires: { $gt: Date.now() },
+    });
 
-  user.password = hashPassword(password);
-  user.resetPasswordToken = "";
-  user.resetPasswordTokenExpires = new Date(0);
-  await user.save();
+    if (!user) {
+        res.status(400).json({ message: "Invalid or expired token" });
+        return;
+    }
 
-  res.json({
-    message: "Password reset successful",
-  });
-};
+    user.password = hashPassword(password);
+    user.resetPasswordToken = "";
+    user.resetPasswordTokenExpires = new Date(0);
+    await user.save();
+
+    res.json({
+        message: "Password reset successful",
+    });
+};  
 
 export default {
   login,

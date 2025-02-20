@@ -4,9 +4,11 @@ import Detailpage from '../Pages/Detail';
 import ForgotPassword from '../Pages/ForgotPassword/forgotpassword';
 import Home from '../Pages/Home';
 import Productspage from '../Pages/Products';
+import ResetPassword from '../Pages/ResetPassword';
 import UserPage from '../Pages/User';
 
 const id = ":id";
+const token = ":token"
 const conversationId = ":conversationId";
 
 export const ROUTES = [
@@ -37,6 +39,10 @@ export const ROUTES = [
             {
                 path: `user/${id}`,
                 element: <UserPage />
+            },
+            {
+                path: `reset-password/${token}`,
+                element: <ResetPassword />
             },
           
         ]
