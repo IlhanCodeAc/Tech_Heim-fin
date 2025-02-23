@@ -7,9 +7,12 @@ import { useSocket } from "../../../../Components/hooks/use-socket";
 import { RenderIf } from "../../../../Components/RenderIf";
 import { cn } from "../../../../lib/utils";
 import { QUERY_KEYS } from "../../../../constants/query-keys";
+import { log } from "console";
 
 const ChatPage = () => {
-  const { user } = useSelector(selectUserData);
+  // const { user,loading,error } = useSelector(selectUserData);
+  const user = JSON.parse(localStorage.getItem('user')!)
+  console.log(user)
   const inputRef = useRef<HTMLInputElement>(null);
   const { data: conversationData, isLoading } = useQuery({
     queryKey: [QUERY_KEYS.ADMIN_CONVERSATIONS],
@@ -37,19 +40,27 @@ const ChatPage = () => {
   }, [selectedConversation]);
 
   useEffect(() => {
+    console.log(socket)
     if (!socket) return;
     socket.on("message", (message) => {
-      if (message.conversation !== selectedConversation?._id) return;
+      // if (message.conversation !== selectedConversation?._id) return;
       setMessages((prev) => [...prev, message]);
     });
-  }, [socket, selectedConversation]);
+  }, [socket]);
+
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(socket,selectedConversation)
     if (!socket || !selectedConversation) return;
     const message = inputRef.current?.value.trim();
+  
     const to = selectedConversation.userId;
+  
     const from = user?._id;
+    console.log(to,from)
     if (!message || !to || !from) return;
     inputRef.current!.value = "";
     

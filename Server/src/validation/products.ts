@@ -28,6 +28,10 @@ export const getAllRentSchema: Schema = {
     in: ["query"],
     optional: true,
   },
+  brand: {
+    in: ["query"],
+    optional: true,
+  },
   capacity: {
     in: ["query"],
     optional: true,

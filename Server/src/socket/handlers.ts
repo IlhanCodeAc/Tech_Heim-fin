@@ -35,6 +35,8 @@ async function onMessage(
       $or: [{ userId: from }, { userId: to }],
     });
 
+    console.log(conversation)
+
     if (!conversation) return;
 
     const messageItem = await Message.create({
@@ -47,10 +49,11 @@ async function onMessage(
     conversation.messages.push(messageItem._id);
     await conversation.save();
 
-    console.log("messageItem", messageItem);
-    console.log("socketId", socketId);
+    // console.log("messageItem", messageItem);
+    // console.log("socketId", socketId);
 
     if (socketId) {
+      console.log(socketId)
       socket.to(socketId).emit("message", messageItem);
     }
   } catch (e) {

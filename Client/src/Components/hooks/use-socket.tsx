@@ -6,12 +6,13 @@ import { Socket, io } from "socket.io-client";
 
 export const useSocket = () => {
   const [socket, setSocket] = useState<Socket>();
-  const { user, loading } = useSelector(selectUserData);
+  // const { user, loading } = useSelector(selectUserData);
+  const user = JSON.parse(localStorage.getItem('user') || "")
 
   useEffect(() => {
 
-    if (!loading) return;
-    const id = getUserId(user);
+    // if (!loading) return;
+    const id = getUserId(user || null);
 
     const newSocket = io("http://localhost:3000", {
       withCredentials: true,
@@ -25,7 +26,7 @@ export const useSocket = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [loading]);
+  }, []);
 
   useEffect(() => {
     return () => {
