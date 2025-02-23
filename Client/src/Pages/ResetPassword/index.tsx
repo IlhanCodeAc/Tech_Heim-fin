@@ -5,7 +5,7 @@ import { z } from "zod";
 import authService from "../../services/auth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom"; // Updated to use useNavigate
+import { useNavigate } from "react-router-dom"; 
 
 const passwordSchema = z
   .object({
@@ -21,7 +21,7 @@ const ResetPassword: React.FC = () => {
   const { token } = useParams<{ token: string }>();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const navigate = useNavigate(); // Used to handle navigation
+  const navigate = useNavigate(); 
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -39,14 +39,12 @@ const ResetPassword: React.FC = () => {
       return authService.resetPassword({ token, password });
     },
     onSuccess: () => {
-      // Show SweetAlert2 when password is successfully reset
       Swal.fire({
         icon: "success",
         title: "Password Reset Successfully",
         text: "Your password has been reset. You can now log in with your new password.",
       }).then(() => {
-        // Redirect to the homepage after clicking "OK" on SweetAlert
-        navigate("/"); // Redirect to the homepage ("/")
+        navigate("/"); 
       });
     },
     onError: (error: any) => {
