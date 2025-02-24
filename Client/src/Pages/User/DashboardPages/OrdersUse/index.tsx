@@ -4,24 +4,32 @@ import { useSelector } from "react-redux";
 import { selectUserData } from "../../../../store/features/userSlice";
 import conversationService from "../../../../services/conversation";
 import { useSocket } from "../../../../Components/hooks/use-socket";
-import { RenderIf } from "../../../../Components/RenderIf";
 import { cn } from "../../../../lib/utils";
 import { QUERY_KEYS } from "../../../../constants/query-keys";
-import { log } from "console";
+
+interface Message {
+  text: string;
+  userId: string;
+  createdAt: string;
+}
+
+interface Conversation {
+  _id: string;
+  userId: string;
+  userName: string;
+}
 
 const ChatPage = () => {
-  // const { user,loading,error } = useSelector(selectUserData);
-  const user = JSON.parse(localStorage.getItem('user')!)
-  console.log(user)
+  const user = JSON.parse(localStorage.getItem("user")!);
   const inputRef = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const { data: conversationData, isLoading } = useQuery({
     queryKey: [QUERY_KEYS.ADMIN_CONVERSATIONS],
     queryFn: conversationService.getAll,
   });
   
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const socket = useSocket();
 
   useEffect(() => {
@@ -35,53 +43,54 @@ const ChatPage = () => {
     const fetchMessages = async () => {
       const response = await conversationService.getById({ id: selectedConversation._id });
       setMessages(response.data.item.messages || []);
+      setTimeout(() => {
+        wrapperRef.current?.scrollTo({ top: wrapperRef.current.scrollHeight, behavior: "smooth" });
+      }, 100);
     };
     fetchMessages();
   }, [selectedConversation]);
 
   useEffect(() => {
-    console.log(socket)
     if (!socket) return;
-    socket.on("message", (message) => {
-      // if (message.conversation !== selectedConversation?._id) return;
+    socket.on("message", (message: Message) => {
       setMessages((prev) => [...prev, message]);
+      setTimeout(() => {
+        wrapperRef.current?.scrollTo({ top: wrapperRef.current.scrollHeight, behavior: "smooth" });
+      }, 100);
     });
   }, [socket]);
 
-
-
-
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(socket,selectedConversation)
     if (!socket || !selectedConversation) return;
     const message = inputRef.current?.value.trim();
-  
+    if (!message) return;
+
     const to = selectedConversation.userId;
-  
     const from = user?._id;
-    console.log(to,from)
-    if (!message || !to || !from) return;
-    inputRef.current!.value = "";
+    if (!to || !from) return;
     
+    inputRef.current!.value = "";
     socket.emit("message", { message, to, from });
     setMessages((prev) => [...prev, { text: message, userId: from, createdAt: new Date().toISOString() }]);
+    setTimeout(() => {
+      wrapperRef.current?.scrollTo({ top: wrapperRef.current.scrollHeight, behavior: "smooth" });
+    }, 100);
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-white p-4 border-r overflow-y-auto">
+    <div className="flex h-[calc(100vh-60px)] bg-blue-50">
+      <div className="w-1/4 bg-white p-4 border-r overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100">
         <h2 className="text-xl font-bold mb-4">Conversations</h2>
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-          conversationData?.data?.items.map((conv) => (
+          conversationData?.data?.items.map((conv: Conversation) => (
             <div
               key={conv._id}
               className={cn(
                 "p-3 rounded cursor-pointer",
-                selectedConversation?._id === conv._id ? "bg-indigo-200" : "hover:bg-gray-100"
+                selectedConversation?._id === conv._id ? "bg-blue-200" : "hover:bg-gray-100"
               )}
               onClick={() => setSelectedConversation(conv)}
             >
@@ -91,28 +100,25 @@ const ChatPage = () => {
         )}
       </div>
 
-      {/* Chat Window */}
-      <div className="w-3/4 flex flex-col bg-gray-100 h-full">
-        <div className="p-4 bg-white border-b">{selectedConversation?.userName || "Select a chat"}</div>
-        <div ref={wrapperRef} className="flex-1 p-4 overflow-y-auto">
+      <div className="w-3/4 flex flex-col bg-blue-100 h-full">
+        <div className="p-4 bg-blue-500 text-white border-b">{selectedConversation?.userName || "Select a chat"}</div>
+        <div ref={wrapperRef} className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100">
           {messages.map((message, idx) => (
             <MessageItem key={idx} message={message.text} owner={message.userId === user?._id} />
           ))}
         </div>
         <form onSubmit={handleSubmit} className="p-4 bg-white border-t flex">
-          <input ref={inputRef} type="text" className="flex-1 p-2 border rounded mr-2" />
-          <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded">Send</button>
+          <input ref={inputRef} type="text" className="flex-1 p-2 border rounded mr-2" placeholder="Type a message..." />
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Send</button>
         </form>
       </div>
     </div>
   );
 };
 
-const MessageItem = ({ message, owner }) => {
+const MessageItem = ({ message, owner }: { message: string; owner: boolean }) => {
   return (
-    <div className={cn("p-3 rounded-lg", owner ? "bg-indigo-100 self-end" : "bg-white self-start")}>
-      {message}
-    </div>
+    <div className={cn("p-3 rounded-lg max-w-xs", owner ? "bg-blue-500 text-white self-end" : "bg-white text-black self-start")}>{message}</div>
   );
 };
 
