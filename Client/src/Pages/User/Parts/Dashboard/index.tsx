@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X, User, ShoppingBag, Package, Heart, Mail, LogOut } from "lucide-react";
+import { Menu, X, User, MessageCircle, Package, Heart, Mail, LogOut } from "lucide-react";
 import style from "./style.module.css";
 import UserSVG from "../../../../assets/SVGs/user.svg";
 import UserTable from "../../DashboardPages/OrdersUse";
@@ -8,8 +8,8 @@ import ProductTable from "../../DashboardPages/ProductsTable";
 import PersonalData from "../../DashboardPages/PersonalData";
 import Wishlist from "../../DashboardPages/Wishlist";
 import { useNavigate } from "react-router-dom";
+import authService from "../../../../services/auth";
 import ChatPage from "../../DashboardPages/OrdersUse";
-import AdminChat from "../../DashboardPages/OrdersUse";
 
 interface SidebarProps {
   setSelectedPage: (page: string) => void;
@@ -28,11 +28,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(localStorage.getItem("user") ? true : false);
 
   useEffect(() => {
-    // Fetch current user data from local storage
     const currentUser = localStorage.getItem("user");
     if (currentUser) {
       const user = JSON.parse(currentUser);
-      setRole(user.role); // Assuming "role" is a key in the user object
+      setRole(user.role);
     }
   }, []);
 
@@ -41,15 +40,12 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
     if (window.innerWidth < 768) toggleSidebar();
   };
 
-  const handleLogout = () => {
-    // Clear the user data from local storage
+  const handleLogout = async () => {
+    await authService.logout();
     localStorage.removeItem("user");
-
-    // Update the logged-in state
     setIsLoggedIn(false);
-
-    // Redirect to the home page
     navigate("/", { replace: true });
+    window.location.reload();
   };
 
   return (
@@ -76,10 +72,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
         </li>
         <li
           className={`flex items-center p-2 cursor-pointer rounded-md 
-            ${selectedPage === "orders" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
-          onClick={() => handleClick("orders")}
+            ${selectedPage === "chat" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
+          onClick={() => handleClick("chat")}
         >
-          <ShoppingBag size={20} className="mr-2" /> Orders
+          <MessageCircle size={20} className="mr-2" /> Chat
         </li>
         {role === "admin" && (
           <li
@@ -122,7 +118,7 @@ const Content: React.FC<ContentProps> = ({ selectedPage }) => {
   return (
     <div className="p-5">
       {selectedPage === "personal-data" && <PersonalData />}
-      {selectedPage === "orders" && <AdminChat />}
+      {selectedPage === "chat" && <ChatPage />}
       {selectedPage === "products" && <ProductTable />}
       {selectedPage === "wishlist" && <Wishlist />}
       {selectedPage === "contact" && <h2>Contact Us Page</h2>}
@@ -131,7 +127,7 @@ const Content: React.FC<ContentProps> = ({ selectedPage }) => {
 };
 
 const Dashboard: React.FC = () => {
-  const [selectedPage, setSelectedPage] = useState<string>("orders");
+  const [selectedPage, setSelectedPage] = useState<string>("chat");
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
