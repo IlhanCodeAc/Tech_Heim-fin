@@ -1,6 +1,7 @@
 import MainLayout from '../Components/MainLayout';
 import Cart from '../Pages/Cart';
 import Detailpage from '../Pages/Detail';
+import FAQ from '../Pages/FAQ';
 import ForgotPassword from '../Pages/ForgotPassword/forgotpassword';
 import Home from '../Pages/Home';
 import Productspage from '../Pages/Products';
@@ -44,7 +45,10 @@ export const ROUTES = [
                 path: `reset-password/${token}`,
                 element: <ResetPassword />
             },
-          
+            {
+                path: `faq`,
+                element: <FAQ />
+            },
         ]
     }
 ];

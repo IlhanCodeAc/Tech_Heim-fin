@@ -1,0 +1,55 @@
+.FaqTop{
+    position: relative;
+    img{
+        width: 100%;
+        height: 426px;
+        margin-top: 84px;
+        object-fit: fill;
+        display: inline-flex;
+        height: 426px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        background: linear-gradient(90deg, rgba(9, 81, 190, 0.20) 0%, rgba(9, 81, 190, 0.00) 100%), url(<path-to-image>) lightgray 0px -201.866px / 100% 158.959% no-repeat;
+    }
+    h3{
+        z-index: 999;
+        color: var(--Primary-Primary-900, #021736);
+
+        /* Web/H3 */
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 500;
+        position: absolute;
+        line-height: normal;
+        top: 250px;
+        left: 100px;
+    }
+}
+.Questions{
+    display: flex;
+    padding: 24px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+    .Question{
+        h2{
+            color: var(--Primary, #0C68F4);
+
+            /* Web/H4 */
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+        p{
+            color: #000;
+
+            /* Web/Body-xl */
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: 28px; /* 140% */
+        }
+    }
+}

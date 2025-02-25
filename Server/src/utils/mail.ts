@@ -10,6 +10,6 @@ export const transporter = nodemailer.createTransport({
   secure: true,
   auth: {
     user: "ilhanma@code.edu.az",
-    pass: "syvi cdhd ixki dbdz"
+    pass: "ruwh yxru pveb eodz"
   },
 });
