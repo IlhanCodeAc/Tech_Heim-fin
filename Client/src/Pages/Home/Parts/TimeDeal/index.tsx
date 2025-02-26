@@ -40,7 +40,7 @@ const Timedeal = () => {
   }, []);
 
   return (
-    <Link to="/products?search=Iphone+16">
+    <Link to="/products/67aafcff11b2d6ee90496054">
     <div className={style.TimeCont}>
       <div className={style.TimeContainer}>
         <div className={style.Left}>

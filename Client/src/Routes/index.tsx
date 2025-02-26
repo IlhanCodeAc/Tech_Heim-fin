@@ -4,8 +4,10 @@ import Detailpage from '../Pages/Detail';
 import FAQ from '../Pages/FAQ';
 import ForgotPassword from '../Pages/ForgotPassword/forgotpassword';
 import Home from '../Pages/Home';
+import NotFound from '../Pages/NotFound';
 import Productspage from '../Pages/Products';
 import ResetPassword from '../Pages/ResetPassword';
+import SuccessPage from '../Pages/Succes';
 import UserPage from '../Pages/User';
 
 const id = ":id";
@@ -49,6 +51,14 @@ export const ROUTES = [
                 path: `faq`,
                 element: <FAQ />
             },
+            {
+                path: 'success',  
+                element: <SuccessPage />
+            },
+            {
+                path: '*',
+                element: <NotFound />
+            }
         ]
     }
 ];

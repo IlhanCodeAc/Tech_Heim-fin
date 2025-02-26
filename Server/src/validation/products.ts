@@ -32,6 +32,14 @@ export const getAllRentSchema: Schema = {
     in: ["query"],
     optional: true,
   },
+  processor: {
+    in: ["query"],
+    optional: true,
+  },
+  graphicscard: {
+    in: ["query"],
+    optional: true,
+  },
   capacity: {
     in: ["query"],
     optional: true,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import Filter from "../../../assets/SVGs/filter-solid.svg";
@@ -20,6 +20,26 @@ export const Sidebar = () => {
   const [rams, setRams] = useState<any[]>([]);
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+
+const sidebarRef = useRef<HTMLDivElement | null>(null);
+
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+
+  if (isOpen) {
+    document.addEventListener("mousedown", handleClickOutside);
+  } else {
+    document.removeEventListener("mousedown", handleClickOutside);
+  }
+
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, [isOpen]);
+
 
   useEffect(() => {
     
@@ -119,10 +139,11 @@ export const Sidebar = () => {
 
   return (
     <div className="flex">
-      <div
-        className={`fixed top-0 left-0 h-full w-72 bg-gray-900 text-white transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} z-50 p-6 shadow-lg transform`}
-        style={{ overflowY: "auto" }}
-      >
+    <div
+  ref={sidebarRef}
+  className={`fixed top-0 left-0 h-full w-72 bg-gray-900 text-white transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} z-50 p-6 shadow-lg transform`}
+  style={{ overflowY: "auto" }}
+>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold">Filters</h2>
           <Button onClick={toggleSidebar} variant="ghost" className="text-white">
@@ -202,8 +223,8 @@ export const Sidebar = () => {
                   <li key={graphicsCard._id} className="flex items-center space-x-3 p-2 rounded-md bg-gray-800 hover:bg-gray-700">
                     <input
                       type="checkbox"
-                      onChange={() => updateFilter("graphics_card", graphicsCard._id)}
-                      checked={getCheckedState("graphics_card", graphicsCard._id)}
+                      onChange={() => updateFilter("graphicscard", graphicsCard._id)}
+                      checked={getCheckedState("graphicscard", graphicsCard._id)}
                     />
                     <label>{graphicsCard.name}</label>
                   </li>

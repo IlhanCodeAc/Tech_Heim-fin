@@ -3,25 +3,21 @@ import style from "./style.module.css";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import cartService from "../../../../services/reservation";
 import swal from "sweetalert2";
-import stripeService from "../../../../services/stripe"; 
-import { Product } from "../../../../types";
 import getStripe from "../../../../Components/utils/stripe";
-import queryClient from "../../../../config/queryClient";
 import { toast } from "sonner";
+import { Product } from "../../../../types";
 
 interface CartItem {
   _id: string;
   productId: string;
-  name?: string;
-  price?: number;
-  images?: string;
-  product: Product;
+  name: string;
+  price: number;
+  image: string;
+  product: Partial<Product>; 
   quantity: number;
 }
 
-
-
-const CartMain = () => {
+const CartMain: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
@@ -30,16 +26,17 @@ const CartMain = () => {
         const cartResponse = await cartService.getAll();
         console.log("Fetched cart data:", cartResponse.data.items);
 
-        const populatedCart = cartResponse.data.items.map((item) => {
+        const populatedCart: CartItem[] = cartResponse.data.items.map((item: any) => {
           const product = item.product || {};
           return {
             ...item,
             productId: product._id || item._id,
             name: product.name || "Unknown Product",
             price: item.price || 0,
-            image: product.images && product.images.length
+            image: product.images?.length
               ? `http://localhost:3000/public/product/${product.images[0]}`
-              : "https://via.placeholder.com/150", 
+              : "https://via.placeholder.com/150",
+            quantity: item.quantity || 1,
           };
         });
 
@@ -54,7 +51,7 @@ const CartMain = () => {
 
   const handleIncrease = async (productId: string) => {
     try {
-      const response = await cartService.addToCart({ productId, quantity: 1 });
+      const response = await cartService.addToCart({ productId, quantity: 1 } as any);
       if (response.data) {
         setCartItems((prevCart) =>
           prevCart.map((item) =>
@@ -62,7 +59,7 @@ const CartMain = () => {
           )
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error increasing quantity:", error.response?.data || error);
     }
   };
@@ -72,7 +69,7 @@ const CartMain = () => {
       const item = cartItems.find((item) => item.productId === productId);
       if (!item || item.quantity <= 1) return;
 
-      const response = await cartService.addToCart({ productId, quantity: -1 });
+      const response = await cartService.addToCart({ productId, quantity: -1 } as any);
       if (response.data) {
         setCartItems((prevCart) =>
           prevCart
@@ -82,7 +79,7 @@ const CartMain = () => {
             .filter((item) => item.quantity > 0) 
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error decreasing quantity:", error.response?.data || error);
     }
   };
@@ -97,9 +94,9 @@ const CartMain = () => {
         setCartItems((prevCart) => prevCart.filter((item) => item.productId !== id));
         swal.fire("Removed!", "Item removed from cart.", "success");
       }
-    } catch (error) {
+    } catch (error: any) {
       swal.fire("Error!", "Failed to remove item.", "error");
-      console.error("Error removing item:", (error as any).response?.data || error);
+      console.error("Error removing item:", error.response?.data || error);
     }
   };
 
@@ -107,47 +104,41 @@ const CartMain = () => {
 
   const handleCheckout = async () => {
     try {
-        console.log("Basket before checkout:", cartItems);
+      console.log("Basket before checkout:", cartItems);
 
-        const itemsForCheckout = cartItems.map(item => ({
-            productId: item.productId,
-            name: item.name,
-            price: item.price ?? 0,  
-            quantity: item.quantity
-        }));
+      const itemsForCheckout = cartItems.map((item) => ({
+        productId: item.productId,
+        name: item.name,
+        price: item.price ?? 0,
+        quantity: item.quantity,
+      }));
 
-        const response = await fetch(`http://localhost:3000/checkout`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ items: itemsForCheckout }),
-        });
+      const response = await fetch(`http://localhost:3000/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: itemsForCheckout }),
+      });
 
-        const data = await response.json();
-        console.log("Response from API:", data);
+      const data = await response.json();
+      console.log("Response from API:", data);
 
-        const { sessionId } = data;
-        const stripe = await getStripe();
+      const { sessionId } = data;
+      const stripe = await getStripe();
 
-        if (stripe && sessionId) {
-            try {
-                await cartService.clearCart(); // Clear cart from backend
-                setCartItems([]); // Clear cart in UI
-            } catch (error) {
-                console.error("Failed to clear cart:", error.response?.data || error);
-            }
-            await stripe.redirectToCheckout({ sessionId });
+      if (stripe && sessionId) {
+        try {
+          await cartService.clearCart();
+          setCartItems([]);
+        } catch (error: any) {
+          console.error("Failed to clear cart:", error.response?.data || error);
         }
+        await stripe.redirectToCheckout({ sessionId });
+      }
     } catch (error) {
-        toast.error("Checkout error.");
-        console.error(error);
+      toast.error("Checkout error.");
+      console.error(error);
     }
-};
-
-
-
-
-  
-  
+  };
 
   return (
     <div className="container">

@@ -12,12 +12,9 @@ const Prods = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [limit, setLimit] = useState(3); // Load 3 products initially
   const navigate = useNavigate();
   
-  // Assuming you fetch or define the userId and conversationId here
-  const [userId, setUserId] = useState<string>("user123");  // Set default userId or fetch from context or API
-  const [conversationId, setConversationId] = useState<string>("conv456");  // Set default conversationId or fetch
-
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -35,16 +32,16 @@ const Prods = () => {
       };
 
       const filteredProducts = await fetchFilteredProducts(filters);
-      setProducts(filteredProducts);
+      setProducts(filteredProducts.slice(0, limit)); // Limit initial load
       setLoading(false);
     };
 
     fetchProducts();
-  }, [searchParams]);
+  }, [searchParams, limit]); // Re-fetch when limit changes
   
   const location = useLocation();
 
-  const isDashboardPage = location.pathname.includes(`/user`)
+  const isDashboardPage = location.pathname.includes(`/user`);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -59,8 +56,12 @@ const Prods = () => {
     navigate(`?${newParams.toString()}`);
   };
 
+  const handleLoadMore = () => {
+    setLimit((prevLimit) => prevLimit + 3); // Load 3 more products
+  };
+
   return (
-    <div className="mb-[100%]">
+    <div className="mb-[20%]">
       <div className="flex items-center bg-white shadow-md rounded-lg px-4 py-2 mb-6 w-full max-w-md mx-auto border border-gray-300 focus-within:border-blue-500">
         <Search className="text-gray-400 mr-2" size={20} />
         <input
@@ -83,22 +84,35 @@ const Prods = () => {
           ))}
         </div>
       ) : (
-        <div className={style.NewProducts}>
-          {products.map((product) => (
-            <Link to={`/products/${product._id}`} key={product._id} className={style.NewProd}>
-              <div className={style.ProdImage}>
-                <img src={product.images?.[0]} alt={product.name} />
-              </div>
-              <div className={style.ProdDetail}>
-                <p className="flex mt-[16px] mb-[16px] flex-col justify-center flex-1 self-stretch overflow-hidden text-[#0C0C0C] text-ellipsis whitespace-nowrap font-inter text-[16px] font-heavy leading-[24px]">
-                  {product.name}
-                </p>
-                <p className="text-[#0C0C0C] font-inter text-[18px] font-heavy leading-normal mt-[40px]">
-                  ${product.price}
-                </p>
-              </div>
-            </Link>
-          ))}
+        <div>
+          <div className={style.NewProducts}>
+            {products.map((product) => (
+              <Link to={`/products/${product._id}`} key={product._id} className={style.NewProd}>
+                <div className={style.ProdImage}>
+                  <img src={product.images?.[0]} alt={product.name} />
+                </div>
+                <div className={style.ProdDetail}>
+                  <p className="flex mt-[16px] mb-[16px] flex-col justify-center flex-1 self-stretch overflow-hidden text-[#0C0C0C] text-ellipsis whitespace-nowrap font-inter text-[16px] font-heavy leading-[24px]">
+                    {product.name}
+                  </p>
+                  <p className="text-[#0C0C0C] font-inter text-[18px] font-heavy leading-normal mt-[40px]">
+                    ${product.price}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {products.length >= limit && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={handleLoadMore}
+                className="px-6 py-2 text-white bg-[#0C68F4] rounded-md hover:bg-blue-700 transition"
+              >
+                Load More
+              </button>
+            </div>
+          )}
         </div>
       )}
       <HelpPopover/>

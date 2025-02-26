@@ -46,10 +46,10 @@ const getAll = async (req: Request, res: Response) => {
     const convertToObjectId = (id: any) =>
       mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : null;
 
-    // if (category) {
-    //   const categoryList = Array.isArray(category) ? category : [category];
-    //   filter.category = { $in: categoryList.map(convertToObjectId) };
-    // }
+    if (category) {
+      const categoryList = Array.isArray(category) ? category : [category];
+      filter.category = { $in: categoryList.map(convertToObjectId) };
+    }
     console.log("capacity",brand)
 
     if (capacity) {

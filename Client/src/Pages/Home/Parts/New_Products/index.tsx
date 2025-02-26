@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { GetAllProductResponseType } from "../../../../services/product/types";
 import productService from "../../../../services/product";
+import { Link } from "react-router-dom";
 
 const Newproducts: React.FC = () => {
   const [products, setProducts] = useState<GetAllProductResponseType["items"]>([]);
@@ -25,9 +26,11 @@ const Newproducts: React.FC = () => {
         <h3 className="flex-shrink-0 self-stretch w-[217px] text-[#0C0C0C] font-inter text-[32px] font-medium leading-normal">
           New Products
         </h3>
+        <Link to="/products">
         <p className="text-center text-[#0C0C0C] font-inter text-[16px] font-normal leading-normal">
           View all {'>'}
         </p>
+        </Link>
       </div>
       <div className={style.NewProducts}>
         {products.map((product) => (

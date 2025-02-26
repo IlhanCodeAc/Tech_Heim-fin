@@ -20,7 +20,6 @@ const Swiping = () => {
       modules={[Navigation, Pagination, Autoplay]}
       spaceBetween={30}
       slidesPerView={1}
-      pagination={{ clickable: true }}
       autoplay={{ delay: 2500, disableOnInteraction: false }}
       style={{
         width: '80%',
