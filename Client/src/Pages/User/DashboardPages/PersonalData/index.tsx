@@ -85,9 +85,7 @@ const PersonalData: React.FC = () => {
               <button onClick={() => handleCopy(value)} className="text-gray-500 hover:text-black">
                 <Clipboard size={20} />
               </button>
-              <button onClick={() => handleEdit(key)} className="text-blue-500 hover:text-blue-700">
-                <Edit size={20} />
-              </button>
+            
             </div>
           </div>
         </div>

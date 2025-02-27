@@ -37,7 +37,7 @@ const Wishlist: React.FC = () => {
   // Add product to cart
   const addToCart = async (productId: string) => {
     try {
-      await cartService.addToCart({ productId, quantity: 1 });
+      await cartService.addToCart({ productId, quantity: 1 } as any);
       Swal.fire("Success!", "Product added to cart!", "success");
     } catch (error) {
       console.error("Error adding to cart:", error);

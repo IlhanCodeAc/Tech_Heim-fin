@@ -70,13 +70,18 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
         >
           <User size={20} className="mr-2" /> Personal Data
         </li>
-        <li
-          className={`flex items-center p-2 cursor-pointer rounded-md 
-            ${selectedPage === "chat" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
-          onClick={() => handleClick("chat")}
-        >
-          <MessageCircle size={20} className="mr-2" /> Chat
-        </li>
+
+        {/* Only show chat for admins */}
+        {role === "admin" && (
+          <li
+            className={`flex items-center p-2 cursor-pointer rounded-md 
+              ${selectedPage === "chat" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
+            onClick={() => handleClick("chat")}
+          >
+            <MessageCircle size={20} className="mr-2" /> Chat
+          </li>
+        )}
+
         {role === "admin" && (
           <li
             className={`flex items-center p-2 cursor-pointer rounded-md 
@@ -86,6 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
             <Package size={20} className="mr-2" /> Products
           </li>
         )}
+
         <li
           className={`flex items-center p-2 cursor-pointer rounded-md 
             ${selectedPage === "wishlist" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
@@ -93,6 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
         >
           <Heart size={20} className="mr-2" /> Wish List
         </li>
+
         <li
           className={`flex items-center p-2 cursor-pointer rounded-md 
             ${selectedPage === "contact" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
@@ -127,10 +134,25 @@ const Content: React.FC<ContentProps> = ({ selectedPage }) => {
 };
 
 const Dashboard: React.FC = () => {
-  const [selectedPage, setSelectedPage] = useState<string>("chat");
+  const [selectedPage, setSelectedPage] = useState<string>("personal-data"); // Default page for non-admin users
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [role, setRole] = useState<string | null>(null);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  useEffect(() => {
+    const currentUser = localStorage.getItem("user");
+    if (currentUser) {
+      const user = JSON.parse(currentUser);
+      setRole(user.role);
+      // Set the default page based on role
+      if (user.role === "admin") {
+        setSelectedPage("chat"); // Admin should see the chat page by default
+      } else {
+        setSelectedPage("personal-data"); // Non-admin users will see personal data by default
+      }
+    }
+  }, []);
 
   return (
     <div className="flex h-screen border border-[#F6F6F6] bg-[#F9F9F9] rounded-lg p-4 relative">

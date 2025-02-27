@@ -84,7 +84,7 @@ const Detailmain: React.FC = () => {
         quantity: 1, 
       };
 
-      await cartService.addToCart(data);
+      await cartService.addToCart(data as any);
       Swal.fire("Success!", "Product added to cart!", "success");
     } catch (error) {
       console.error("Error adding product to cart:", error);
