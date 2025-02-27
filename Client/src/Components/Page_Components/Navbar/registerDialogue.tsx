@@ -35,8 +35,8 @@ const RegisterDialog = () => {
     },
     onSuccess: () => {
       console.log("Registration Successful");
-      reset(); // Reset form fields after success
-      setIsOpen(false); // Close modal
+      reset(); 
+      setIsOpen(false); 
     },
     onError: (error) => {
       console.error("Registration Failed:", error);
