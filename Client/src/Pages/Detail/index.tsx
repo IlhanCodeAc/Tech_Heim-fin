@@ -4,6 +4,7 @@ import Detailmain from "./Parts/DetailMain";
 import Comments from "./Parts/DetailComments";
 import productService from "../../services/product";
 import { Product } from "../../types";
+import Timedeal from "../Home/Parts/TimeDeal";
 
 const Detailpage: React.FC = () => {
   const { id } = useParams();
@@ -42,6 +43,7 @@ const Detailpage: React.FC = () => {
       <>
         <Detailmain  />
         <Comments  />
+        <Timedeal/>
       </>
     </div>
   );

@@ -21,7 +21,7 @@ const Prods = () => {
       
       const filters = {
         search: searchParams.get("search") || undefined,
-        graphics_card: searchParams.get("graphics_card") || undefined,
+        graphics_card: searchParams.get("graphicscard") || undefined,
         processor: searchParams.get("processor") || undefined,
         brand: searchParams.get("brand") || undefined,
         min_price: searchParams.get("min_price") ? Number(searchParams.get("min_price")) : undefined,
