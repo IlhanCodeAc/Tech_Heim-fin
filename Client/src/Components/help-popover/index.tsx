@@ -91,6 +91,30 @@ export const HelpPopover = () => {
     setMessages((prev) => [...prev, { text: message, userId, createdAt: new Date().toISOString() }]);
   };
 
+  if (!userId) {
+    return (
+      <div id="help-popover" className="fixed bottom-4 right-4">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="inline-flex items-center justify-center text-sm font-medium border rounded-full w-16 h-16 bg-black hover:bg-gray-700"
+        >
+          <User2Icon size={30} color="white" />
+        </button>
+        <RenderIf condition={isOpen}>
+          <div className="fixed bottom-[calc(4rem+1.5rem)] right-4 bg-white shadow-lg p-4 rounded-lg border w-[360px] h-[500px] flex flex-col">
+            <div className="flex flex-col space-y-1.5 pb-4 border-b">
+              <h2 className="font-semibold text-lg">TechHeim Help Chat</h2>
+              <p className="text-sm text-gray-500">Powered by PF401</p>
+            </div>
+            <div className="flex-1 flex justify-center items-center text-center text-gray-500">
+              <p>Please log in to contact admin</p>
+            </div>
+          </div>
+        </RenderIf>
+      </div>
+    );
+  }
+
   return (
     <div id="help-popover" className="fixed bottom-4 right-4">
       <button

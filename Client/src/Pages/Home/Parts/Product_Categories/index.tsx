@@ -14,10 +14,12 @@ const HomeCats = () => {
               <img src={Phone} alt="" />
               <p className={style.CategoryName}>Accesoires</p>
           </div>
+          <Link to="/products?search=laptop">
           <div className={style.Category}>
               <img src={Laptop} alt="" />
               <p className={style.CategoryName}>Laptops</p>
           </div>
+          </Link>
           <Link to="/products?category=67b2efc5f3a5632af66b3dbc">
           <div className={style.Category}>
               <img src={Dualshock} alt="" />

@@ -10,6 +10,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import style from "./style.module.css"
+import { Link } from 'react-router-dom';
 const Swiping = () => {
   return (
     <div>
@@ -27,14 +28,17 @@ const Swiping = () => {
       }}
     >
       <SwiperSlide>
+        <Link to="/products?brand=67aa37a81e0582342cc67003">
         <div style={styles.slideContainer}>
           <img src={Sony} alt="Sony" style={styles.image as React.CSSProperties} />
         </div>
+        </Link>
       </SwiperSlide>
       <SwiperSlide>
-        <div style={styles.slideContainer}>
+       <Link to="/products?brand=67aa37951e0582342cc66ffa"> <div style={styles.slideContainer}>
           <img src={Apple} alt="Apple" style={styles.image as React.CSSProperties} />
         </div>
+        </Link>
       </SwiperSlide>
       <SwiperSlide>
         <div style={styles.slideContainer}>
@@ -47,9 +51,11 @@ const Swiping = () => {
         </div>
       </SwiperSlide>
       <SwiperSlide>
+        <Link to="http://localhost:5173/products?brand=67aa379d1e0582342cc66ffd">
         <div style={styles.slideContainer}>
           <img src={Samsung} alt="Samsung" style={styles.image as React.CSSProperties} />
         </div>
+        </Link>
       </SwiperSlide>
     </Swiper>
     </div>

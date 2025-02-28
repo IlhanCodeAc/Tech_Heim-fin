@@ -7,9 +7,11 @@ import { Socket, io } from "socket.io-client";
 export const useSocket = () => {
   const [socket, setSocket] = useState<Socket>();
   // const { user, loading } = useSelector(selectUserData);
-  const user = JSON.parse(localStorage.getItem('user') || "")
+  const user = JSON.parse(localStorage.getItem('user') || "{}");
+
 
   useEffect(() => {
+    if (!user || !user._id) return; 
 
     // if (!loading) return;
     const id = getUserId(user || null);

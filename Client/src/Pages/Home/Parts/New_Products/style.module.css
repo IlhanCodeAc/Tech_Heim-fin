@@ -19,6 +19,10 @@
     border-radius: 8px;
     background: var(--White, #FFF);
     box-shadow: -2px 2px 15px -1px rgba(113, 113, 113, 0.12);
+    transition: 0.3s;
+}
+.NewProd:hover{
+    scale:1.05
 }
 
 .ProdImage {
@@ -46,3 +50,40 @@
         display: none;
     }
 }
+.skeletonImage {
+    width: 100%;
+    height: 200px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    animation: skeleton-loading 1.2s infinite ease-in-out;
+  }
+  
+  .skeletonTitle {
+    height: 16px;
+    width: 80%;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    animation: skeleton-loading 1.2s infinite ease-in-out;
+  }
+  
+  .skeletonPrice {
+    height: 16px;
+    width: 60%;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    animation: skeleton-loading 1.2s infinite ease-in-out;
+  }
+  
+  @keyframes skeleton-loading {
+    0% {
+      background-color: #f0f0f0;
+    }
+    50% {
+      background-color: #e0e0e0;
+    }
+    100% {
+      background-color: #f0f0f0;
+    }
+  }
+  
