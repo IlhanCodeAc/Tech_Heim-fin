@@ -20,11 +20,18 @@ const removeFromCart = async (data: RemoveFromCartRequestPayload) => {
   return await axiosInstance.delete<RemoveFromCartResponseType>(`/cart/${data.productId}`);
 };
 
+const decreaseFromCart = async (data: AddToCartRequestPayload) => {
+  return await axiosInstance.post<AddToCartResponseType>("/cart", {
+    ...data,
+    quantity: -1, 
+  });
+};
+
 
 const clearCart = async () => {
   return await axiosInstance.delete<ClearCartResponseType>("/cart/clear");
 };
 
-const cartService = { getAll, addToCart, removeFromCart, clearCart };
+const cartService = { getAll, addToCart, removeFromCart, clearCart, decreaseFromCart };
 
 export default cartService;

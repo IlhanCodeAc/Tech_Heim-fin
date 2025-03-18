@@ -67,16 +67,19 @@ const CartMain: React.FC = () => {
   const handleDecrease = async (productId: string) => {
     try {
       const item = cartItems.find((item) => item.productId === productId);
-      if (!item || item.quantity <= 1) return;
+      if (!item) return;
+
+      if (item.quantity === 1) {
+        await handleRemove(productId);
+        return;
+      }
 
       const response = await cartService.addToCart({ productId, quantity: -1 } as any);
       if (response.data) {
         setCartItems((prevCart) =>
-          prevCart
-            .map((item) =>
-              item.productId === productId ? { ...item, quantity: item.quantity - 1 } : item
-            )
-            .filter((item) => item.quantity > 0) 
+          prevCart.map((item) =>
+            item.productId === productId ? { ...item, quantity: item.quantity - 1 } : item
+          )
         );
       }
     } catch (error: any) {
