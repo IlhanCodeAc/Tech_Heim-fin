@@ -7,7 +7,6 @@ import { useMutation } from "@tanstack/react-query";
 import authService from "../../../services/auth";
 import { Link } from "react-router-dom"; // Import Link for routing
 
-// Validation schema for Login
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
@@ -23,9 +22,9 @@ const LoginDialog = () => {
     },
     onSuccess: (data) => {
       console.log("Login Successful:", data);
-      localStorage.setItem("user", JSON.stringify(data.user)); // Store user
-      setIsOpen(false); // Close modal
-      window.location.reload(); // Refresh to reflect auth state
+      localStorage.setItem("user", JSON.stringify(data.user)); 
+      setIsOpen(false); 
+      window.location.reload(); 
     },
 
     onError: (error: any) => {

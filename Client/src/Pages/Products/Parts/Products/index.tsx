@@ -4,7 +4,6 @@ import style from "./style.module.css";
 import { Product } from "../../../../types";
 import { fetchFilteredProducts } from "../../../../filterUtil";
 import { Search } from "lucide-react";
-import UserChatDialog from "./userChat";
 import { HelpPopover } from "../../../../Components/help-popover";
 
 const Prods = () => {
@@ -12,7 +11,7 @@ const Prods = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [limit, setLimit] = useState(3); // Load 3 products initially
+  const [limit, setLimit] = useState(3); 
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -57,12 +56,11 @@ const Prods = () => {
   };
 
   const handleLoadMore = () => {
-    setLimit((prevLimit) => prevLimit + 3); // Load 3 more products
+    setLimit((prevLimit) => prevLimit + 3); 
   };
 
   return (
     <div className="mb-[25%]">
-      {/* Search Bar */}
       <div className="flex items-center bg-white shadow-md rounded-lg px-4 py-2 mb-6 w-full max-w-md mx-auto border border-gray-300 focus-within:border-blue-500">
         <Search className="text-gray-400 mr-2" size={20} />
         <input
@@ -85,7 +83,6 @@ const Prods = () => {
           ))}
         </div>
       ) : products.length === 0 ? (
-        // No Products Found Message
         <div className="flex flex-col items-center justify-center text-center mt-16">
           <div className="text-gray-500 text-6xl mb-4">🔍</div>
           <p className="text-gray-700 text-lg font-semibold">
@@ -97,7 +94,6 @@ const Prods = () => {
         </div>
       ) : (
         <div>
-          {/* Product List */}
           <div className={style.NewProducts}>
             {products.map((product) => (
               <Link to={`/products/${product._id}`} key={product._id} className={style.NewProd}>
@@ -116,7 +112,6 @@ const Prods = () => {
             ))}
           </div>
 
-          {/* Load More Button */}
           {products.length >= limit && (
             <div className="flex justify-center mt-6">
               <button
