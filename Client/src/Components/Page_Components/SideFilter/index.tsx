@@ -153,7 +153,6 @@ useEffect(() => {
 
         <nav>
           <ul className="space-y-6">
-            {/* Price Filter */}
             <li>
               <button
                 onClick={togglePrice}

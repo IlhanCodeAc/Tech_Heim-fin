@@ -32,12 +32,12 @@ const Prods = () => {
       };
 
       const filteredProducts = await fetchFilteredProducts(filters);
-      setProducts(filteredProducts.slice(0, limit)); // Limit initial load
+      setProducts(filteredProducts.slice(0, limit)); 
       setLoading(false);
     };
 
     fetchProducts();
-  }, [searchParams, limit]); // Re-fetch when limit changes
+  }, [searchParams, limit]); 
   
   const location = useLocation();
 
@@ -61,7 +61,8 @@ const Prods = () => {
   };
 
   return (
-    <div className="mb-[20%]">
+    <div className="mb-[25%]">
+      {/* Search Bar */}
       <div className="flex items-center bg-white shadow-md rounded-lg px-4 py-2 mb-6 w-full max-w-md mx-auto border border-gray-300 focus-within:border-blue-500">
         <Search className="text-gray-400 mr-2" size={20} />
         <input
@@ -69,7 +70,7 @@ const Prods = () => {
           placeholder="Search products..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className=" bg-transparent outline-none text-gray-800 placeholder-gray-500"
+          className="bg-transparent outline-none text-gray-800 placeholder-gray-500 w-full"
         />
       </div>
 
@@ -83,8 +84,20 @@ const Prods = () => {
             </div>
           ))}
         </div>
+      ) : products.length === 0 ? (
+        // No Products Found Message
+        <div className="flex flex-col items-center justify-center text-center mt-16">
+          <div className="text-gray-500 text-6xl mb-4">🔍</div>
+          <p className="text-gray-700 text-lg font-semibold">
+            Sorry, we couldn't find the product you're looking for.
+          </p>
+          <p className="text-gray-500 mt-2">
+            Try adjusting your search filters or checking back later.
+          </p>
+        </div>
       ) : (
         <div>
+          {/* Product List */}
           <div className={style.NewProducts}>
             {products.map((product) => (
               <Link to={`/products/${product._id}`} key={product._id} className={style.NewProd}>
@@ -103,6 +116,7 @@ const Prods = () => {
             ))}
           </div>
 
+          {/* Load More Button */}
           {products.length >= limit && (
             <div className="flex justify-center mt-6">
               <button
@@ -115,7 +129,8 @@ const Prods = () => {
           )}
         </div>
       )}
-      <HelpPopover/>
+
+      <HelpPopover />
     </div>
   );
 };

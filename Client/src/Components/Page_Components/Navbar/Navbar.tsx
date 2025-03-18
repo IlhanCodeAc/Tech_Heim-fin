@@ -10,6 +10,7 @@ import RegisterDialog from "./registerDialogue";
 import authService from "../../../services/auth";
 import { User } from "../../../types";
 import UserLogo from "../../../assets/SVGs/user.svg";
+import swal from "sweetalert2";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -26,6 +27,17 @@ const Navbar = () => {
 
     fetchUser();
   }, []);
+
+  const handleCartClick = () => {
+    if (!user) {
+      swal.fire({
+        title: "Access Denied",
+        text: "You need to be logged in to view your cart.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+    }
+  };
 
   return (
     <div className="container flex items-center">
@@ -54,13 +66,13 @@ const Navbar = () => {
           </div>
 
           {/* Cart Link */}
-          <div className={style.Basket}>
+          <div className={style.Basket} onClick={handleCartClick}>
             {user ? (
               <Link to={`/user/${user._id}/cart`}>
                 <img src={BasketLogo} alt="Basket" />
               </Link>
             ) : (
-              <img src={BasketLogo} alt="Basket" />
+              <img src={BasketLogo} alt="Basket" className="cursor-pointer" />
             )}
           </div>
 
