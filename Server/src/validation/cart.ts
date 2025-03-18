@@ -13,7 +13,7 @@ export const addToCartSchema: Schema = {
   quantity: {
     in: ["body"],
     isInt: {
-      options: { min: -1 }, // Allow negative for decreasing, positive for adding
+      options: { min: -1 }, 
       errorMessage: "Quantity must be an integer (-1 to decrease, positive to add)",
     },
     notEmpty: true,
