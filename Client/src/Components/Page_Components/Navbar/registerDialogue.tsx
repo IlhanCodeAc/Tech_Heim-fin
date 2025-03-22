@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import authService from "../../../services/auth";
+import Swal from "sweetalert2";
 
 const registerValidationSchema = z.object({
   email: z.string().email("Invalid email").nonempty("Email is required"),
@@ -34,12 +35,28 @@ const RegisterDialog = () => {
       return response;
     },
     onSuccess: () => {
-      console.log("Registration Successful");
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful',
+        text: 'You have successfully registered!',
+      });
       reset(); 
       setIsOpen(false); 
     },
-    onError: (error) => {
-      console.error("Registration Failed:", error);
+    onError: (error: any) => {
+      if (error.response && error.response.data.message === "User already exists with this email") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: 'A user with this email already exists.',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: 'Something went wrong. Please try again.',
+        });
+      }
     },
   });
 

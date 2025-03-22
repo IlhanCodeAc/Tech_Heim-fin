@@ -18,10 +18,13 @@ const userSchema = new Schema({
   address: {
     type: String,
     required: true,
+    unique:false
+
   },
   number: {
     type: Number,
     required: true,
+    unique:false
   },
   password: {
     type: String,
@@ -61,5 +64,7 @@ userSchema.set("toJSON", {
     delete ret.__v;
   },
 });
+
+
 
 export default mongoose.model("User", userSchema);
