@@ -1,5 +1,6 @@
 import MainLayout from '../Components/MainLayout';
 import Cart from '../Pages/Cart';
+import CheckoutPage from '../Pages/Checkout';
 import Detailpage from '../Pages/Detail';
 import FAQ from '../Pages/FAQ';
 import ForgotPassword from '../Pages/ForgotPassword/forgotpassword';
@@ -9,6 +10,7 @@ import Productspage from '../Pages/Products';
 import ResetPassword from '../Pages/ResetPassword';
 import SuccessPage from '../Pages/Succes';
 import UserPage from '../Pages/User';
+import OrderDetailsPage from '../Pages/User/DashboardPages/Orders/orderdet';
 
 const id = ":id";
 const token = ":token"
@@ -58,7 +60,15 @@ export const ROUTES = [
             {
                 path: '*',
                 element: <NotFound />
-            }
+            },
+            {
+                path: 'checkout',
+                element: <CheckoutPage />
+            },
+            {
+                path: `order/${id}`, 
+                element: <OrderDetailsPage />  
+              }
         ]
     }
 ];

@@ -24,6 +24,11 @@ import cartRoutes from "./routes/cart"
 import wishlistRoutes from "./routes/wishlist"
 import checkoutRoutes from "./routes/checkout"
 import webhookRoute from "./routes/webhook"
+import paymentRoutes from "./routes/payment"
+import orderRoutes from "./routes/order"
+
+
+
 
 import { connectSocket } from "./socket";
 import "./auth/local-strategy";
@@ -79,6 +84,10 @@ app.use("/location", locationRoutes);
 app.use("/product", productRoutes);
 app.use("/review", reviewRoutes);
 app.use("/conversation", conversationRoutes);
+app.use("/payment", paymentRoutes);
+app.use("/order", orderRoutes);
+
+
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

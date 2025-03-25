@@ -10,6 +10,7 @@ import Wishlist from "../../DashboardPages/Wishlist";
 import { useNavigate } from "react-router-dom";
 import authService from "../../../../services/auth";
 import ChatPage from "../../DashboardPages/OrdersUse";
+import OrdersPage from "../../DashboardPages/Orders";
 
 interface SidebarProps {
   setSelectedPage: (page: string) => void;
@@ -105,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
             ${selectedPage === "contact" ? "text-[#0C68F4] border-l-4 border-[#0C68F4]" : "hover:bg-gray-300"}`}
           onClick={() => handleClick("contact")}
         >
-          <Mail size={20} className="mr-2" /> Contact Us
+          <Mail size={20} className="mr-2" /> Orders
         </li>
       </ul>
 
@@ -128,7 +129,7 @@ const Content: React.FC<ContentProps> = ({ selectedPage }) => {
       {selectedPage === "chat" && <ChatPage />}
       {selectedPage === "products" && <ProductTable />}
       {selectedPage === "wishlist" && <Wishlist />}
-      {selectedPage === "contact" && <h2>Contact Us Page</h2>}
+      {selectedPage === "contact" && <OrdersPage/>}
     </div>
   );
 };
@@ -145,11 +146,10 @@ const Dashboard: React.FC = () => {
     if (currentUser) {
       const user = JSON.parse(currentUser);
       setRole(user.role);
-      // Set the default page based on role
       if (user.role === "admin") {
-        setSelectedPage("chat"); // Admin should see the chat page by default
+        setSelectedPage("chat"); 
       } else {
-        setSelectedPage("personal-data"); // Non-admin users will see personal data by default
+        setSelectedPage("personal-data"); 
       }
     }
   }, []);

@@ -1,35 +1,61 @@
-import { stripe } from "../lib/stripe";
-import { formatAmountForStripe } from "../utils/stripe";
+import { Request, Response } from "express";
+import PaymentMethod from "../mongoose/schemas/payment";
+import User from "../mongoose/schemas/user";
 
-export function formatAmountForStripe(amount: number, currency: string): number {
-    if (isNaN(amount)) {
-        throw new Error("Invalid amount: NaN detected!");
+const addPaymentMethod = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { cardNumber, cvv, expiryDate, isDefault } = req.body;
+    const userId = req.user?._id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
     }
-    return Math.round(amount * 100); // Ensure it's an integer
-}
 
-export async function createCheckoutSession(amount: number): Promise<{ url: string | null }> {
-    if (isNaN(amount) || amount <= 0) {
-        console.error("Invalid checkout amount:", amount);
-        throw new Error("Invalid amount for checkout session");
+    if (isDefault) {
+      await PaymentMethod.updateMany({ user: userId }, { isDefault: false });
     }
 
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        mode: 'payment',
-        line_items: [
-            {
-                price_data: {
-                    currency: 'usd',
-                    product_data: { name: 'Product Name' },
-                    unit_amount: formatAmountForStripe(amount, 'usd'),
-                },
-                quantity: 1,
-            }
-        ],
-        success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `http://localhost:3000/cancel`,
-    });
+    const newPayment = new PaymentMethod({ user: userId, cardNumber, cvv, expiryDate, isDefault });
+    await newPayment.save();
 
-    return { url: session.url };
-}
+    res.json({ message: "Payment method added successfully", payment: newPayment });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const getPaymentMethods = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+    const payments = await PaymentMethod.find({ user: userId }).select("-cvv -cardNumber");
+    res.json({ message: "Payment methods retrieved", payments });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const removePaymentMethod = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { paymentId } = req.params;
+    const userId = req.user?._id;
+
+    const payment = await PaymentMethod.findOneAndDelete({ _id: paymentId, user: userId });
+    if (!payment) {
+      res.status(404).json({ message: "Payment method not found" });
+      return;
+    }
+
+    res.json({ message: "Payment method removed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export default {
+  addPaymentMethod,
+  getPaymentMethods,
+  removePaymentMethod,
+};

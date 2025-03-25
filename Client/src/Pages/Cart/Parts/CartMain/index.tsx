@@ -6,6 +6,7 @@ import swal from "sweetalert2";
 import getStripe from "../../../../Components/utils/stripe";
 import { toast } from "sonner";
 import { Product } from "../../../../types";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 interface CartItem {
   _id: string;
@@ -13,12 +14,13 @@ interface CartItem {
   name: string;
   price: number;
   image: string;
-  product: Partial<Product>; 
+  product: Partial<Product>;
   quantity: number;
 }
 
 const CartMain: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -137,6 +139,12 @@ const CartMain: React.FC = () => {
         }
         await stripe.redirectToCheckout({ sessionId });
       }
+      
+      // Store total price in localStorage
+      localStorage.setItem('checkoutTotal', subtotal.toFixed(2));
+
+      // Redirect to the checkout page
+      navigate("/checkout");
     } catch (error) {
       toast.error("Checkout error.");
       console.error(error);
