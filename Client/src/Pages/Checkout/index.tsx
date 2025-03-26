@@ -2,12 +2,24 @@ import React, { useEffect, useState } from "react";
 import swal from "sweetalert2";
 import { toast } from "sonner";
 import cartService from "../../services/reservation";
-import checkoutService from "../../services/checkout";
-import paymentService from "../../services/paymment";
 import orderService from "../../services/orders";
 import { z } from "zod";
 
-// Zod validation schema
+interface CartItem {
+  productId: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+}
+
+
 const cardDetailsSchema = z.object({
   cardNumber: z
     .string()
@@ -24,19 +36,6 @@ const cardDetailsSchema = z.object({
   address: z.string().nonempty("Billing address is required"),
 });
 
-interface CartItem {
-  _id: string;
-  productId: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
-
-interface User {
-  _id: string;
-}
-
 const CheckoutPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [user, setUser] = useState<User | null>(null);
@@ -46,23 +45,23 @@ const CheckoutPage: React.FC = () => {
     expiryDate: "",
     address: "",
   });
-  const [error, setError] = useState<string | null>(null); // For displaying validation errors
-  const [formErrors, setFormErrors] = useState<any>({}); // For individual field errors
+  const [error, setError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<any>({});
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
         const cartResponse = await cartService.getAll();
-        const populatedCart: CartItem[] = cartResponse.data.items.map((item: any) => {
-          return {
-            ...item,
-            productId: item.productId || item._id,
-            name: item.product.name || "Unknown Product",
-            price: item.price || 0,
-            image: item.product.images?.[0] || "https://via.placeholder.com/150",
-            quantity: item.quantity || 1,
-          };
-        });
+        const populatedCart: CartItem[] = cartResponse.data.items.map((item: any) => ({
+          ...item,
+          productId: item.productId || item._id,
+          name: item.product.name || "Unknown Product",
+          price: item.price || 0,
+          image: item.product.images?.length
+            ? `http://localhost:3000/public/product/${item.product.images[0]}`
+            : "https://via.placeholder.com/150",
+          quantity: item.quantity || 1,
+        }));
         setCartItems(populatedCart);
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -80,26 +79,38 @@ const CheckoutPage: React.FC = () => {
     fetchUser();
   }, []);
 
-  const handleCheckout = async () => {
-    setFormErrors({}); // Reset form errors
+  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+    let formattedValue = value;
 
-    // Validate card details using Zod
+    if (value.length > 2) {
+      formattedValue = `${value.slice(0, 2)}/${value.slice(2, 4)}`;
+    } else if (value.length > 0) {
+      formattedValue = `${value.slice(0, 2)}`;
+    }
+
+    setCardDetails((prev) => ({ ...prev, expiryDate: formattedValue }));
+  };
+
+  const handleCheckout = async () => {
+    setFormErrors({});
+  
     try {
       cardDetailsSchema.parse(cardDetails);
-      setError(null); // Clear any previous errors
-
+      setError(null);
+  
       const itemsForOrder = cartItems.map((item) => ({
         productId: item.productId,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
       }));
-
+  
       const orderData = {
         userId: user?._id,
         items: itemsForOrder,
         total: cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0),
-        currency: "USD", // Assuming USD
+        currency: "USD",
         paymentDetails: {
           cardNumber: cardDetails.cardNumber,
           cvv: cardDetails.cvv,
@@ -107,32 +118,27 @@ const CheckoutPage: React.FC = () => {
           address: cardDetails.address,
         },
       };
-
-      // Create the order
+  
       const createOrderResponse = await orderService.createOrder(orderData as any);
       if (createOrderResponse) {
-        // Proceed to the checkout session
-        const checkoutResponse = await checkoutService.create({
-          userId: user?._id,
-          amount: orderData.total,
-          paymentDetails: orderData.paymentDetails,
-        });
-
-        const checkoutData = await checkoutResponse.data;
-        if (checkoutData) {
-          swal.fire("Success!", "Your order has been placed.", "success");
-          await cartService.clearCart();
-          setCartItems([]);
-          // Redirect to the home page after success
+        await cartService.clearCart(); 
+        setCartItems([]); 
+  
+        swal.fire({
+          title: "Order Placed!",
+          text: "Your order has been placed successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
           window.location.href = "/";
-        }
+        });
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setError(error.errors[0].message); // Get the first error message
+        setError(error.errors[0].message);
         setFormErrors(
           error.errors.reduce((acc: any, curr: any) => {
-            acc[curr.path[0]] = curr.message; // Store errors by field
+            acc[curr.path[0]] = curr.message;
             return acc;
           }, {})
         );
@@ -146,9 +152,8 @@ const CheckoutPage: React.FC = () => {
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4">
+    <div className="max-w-6xl mx-auto py-10 px-4 mb-[10%]">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Cart Items Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
           {cartItems.length > 0 ? (
@@ -166,7 +171,6 @@ const CheckoutPage: React.FC = () => {
           )}
         </div>
 
-        {/* Payment Details Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4">Payment Details</h2>
           {error && <p className="text-red-500">{error}</p>}
@@ -198,7 +202,7 @@ const CheckoutPage: React.FC = () => {
               type="text"
               placeholder="Expiry Date (MM/YY)"
               value={cardDetails.expiryDate}
-              onChange={(e) => setCardDetails({ ...cardDetails, expiryDate: e.target.value })}
+              onChange={handleExpiryDateChange}
               className="w-full p-2 border border-gray-300 rounded-md mb-2"
             />
             {formErrors.expiryDate && <p className="text-red-500">{formErrors.expiryDate}</p>}
@@ -222,7 +226,7 @@ const CheckoutPage: React.FC = () => {
             onClick={handleCheckout}
             className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
           >
-            Proceed to Checkout
+            Place an Order
           </button>
         </div>
       </div>

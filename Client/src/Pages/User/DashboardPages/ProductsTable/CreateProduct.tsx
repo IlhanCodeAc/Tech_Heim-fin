@@ -183,7 +183,8 @@ export default function ProductCreateDialog() {
       <DialogTrigger>
         <Button className="w-full md:w-auto">Create Product</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl w-full p-6 rounded-xl shadow-lg">
+      <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 rounded-xl shadow-lg md:max-w-3xl sm:max-w-full sm:p-4">
+
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">Create Product</DialogTitle>
         </DialogHeader>

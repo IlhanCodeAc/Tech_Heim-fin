@@ -49,10 +49,12 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
     window.location.reload();
   };
 
+  const username = JSON.parse(localStorage.getItem("user") || '{}')?.name || "User";
+
   return (
     <div
       className={`fixed md:relative top-0 left-0 h-full w-64 border border-[#F6F6F6] bg-[#F9F9F9] rounded-lg p-5 
-        transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+        transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0 z-50" : "-translate-x-full md:translate-x-0"} md:translate-x-0`}
     >
       <button className="md:hidden absolute top-4 right-4" onClick={toggleSidebar}>
         <X size={24} />
@@ -60,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
 
       <div className={style.User}>
         <img src={UserSVG} alt="User" className="w-[40px] h-[40px]" />
-        <h2>Ilhan Afandiyev</h2>
+        <h2>{username}</h2>
       </div>
 
       <ul className="mt-5 space-y-2">
@@ -124,12 +126,12 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedPage, isOpen, toggleSideba
 
 const Content: React.FC<ContentProps> = ({ selectedPage }) => {
   return (
-    <div className="p-5">
+    <div className="p-5 overflow-auto">
       {selectedPage === "personal-data" && <PersonalData />}
       {selectedPage === "chat" && <ChatPage />}
       {selectedPage === "products" && <ProductTable />}
       {selectedPage === "wishlist" && <Wishlist />}
-      {selectedPage === "contact" && <OrdersPage/>}
+      {selectedPage === "contact" && <OrdersPage />}
     </div>
   );
 };
@@ -147,22 +149,22 @@ const Dashboard: React.FC = () => {
       const user = JSON.parse(currentUser);
       setRole(user.role);
       if (user.role === "admin") {
-        setSelectedPage("chat"); 
+        setSelectedPage("chat");
       } else {
-        setSelectedPage("personal-data"); 
+        setSelectedPage("personal-data");
       }
     }
   }, []);
 
   return (
-    <div className="flex h-screen border border-[#F6F6F6] bg-[#F9F9F9] rounded-lg p-4 relative">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar
         setSelectedPage={setSelectedPage}
         isOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
         selectedPage={selectedPage}
       />
-      <div className="flex-1 flex flex-col px-4">
+      <div className="flex-1 flex flex-col px-4 overflow-auto">
         <button className="md:hidden p-2" onClick={toggleSidebar}>
           <Menu size={24} />
         </button>

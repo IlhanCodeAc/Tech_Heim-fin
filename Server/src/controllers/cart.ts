@@ -110,7 +110,7 @@ const removeFromCart = async (req: Request, res: Response, next: NextFunction): 
     await cart.save();
     res.json({ message: "Product removed from cart successfully", cart });
   } catch (err) {
-    next(err); // Pass the error to the next error handling middleware
+    next(err);
   }
 };
 
@@ -122,12 +122,22 @@ const clearCart = async (req: Request, res: Response, next: NextFunction): Promi
       return;
     }
 
-    await Cart.findOneAndDelete({ user: user._id });
+    const cart = await Cart.findOne({ user: user._id });
+    if (!cart) {
+      res.status(404).json({ message: "Cart not found" });
+      return;
+    }
+
+    cart.items.splice(0, cart.items.length); // Correctly clears the DocumentArray
+    cart.total = 0;
+
+    await cart.save();
     res.json({ message: "Cart cleared successfully" });
   } catch (err) {
-    next(err); // Pass the error to the next error handling middleware
+    next(err);
   }
 };
+
 
 export default {
   getAll,

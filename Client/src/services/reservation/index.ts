@@ -27,9 +27,8 @@ const decreaseFromCart = async (data: AddToCartRequestPayload) => {
   });
 };
 
-
 const clearCart = async () => {
-  return await axiosInstance.delete<ClearCartResponseType>("/cart/clear");
+  return await axiosInstance.delete<ClearCartResponseType>("/cart");
 };
 
 const cartService = { getAll, addToCart, removeFromCart, clearCart, decreaseFromCart };

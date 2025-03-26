@@ -27,9 +27,9 @@ router.delete(
 );
 
 router.delete(
-  "/clear",
+  "/",
   authorize({}),
-  validateSchema(clearCartSchema),
+  validateSchema(clearCartSchema), 
   cartController.clearCart
 );
 
