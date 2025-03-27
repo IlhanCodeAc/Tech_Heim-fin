@@ -10,10 +10,6 @@ const HomeCats = () => {
   return (
     <div className='container'>
         <div className={style.CatsContainer}>
-          <div className={style.Category}>
-              <img src={Phone} alt="" />
-              <p className={style.CategoryName}>Accesoires</p>
-          </div>
           <Link to="/products?search=laptop">
           <div className={style.Category}>
               <img src={Laptop} alt="" />

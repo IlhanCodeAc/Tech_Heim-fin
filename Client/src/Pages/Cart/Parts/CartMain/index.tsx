@@ -139,9 +139,9 @@ const CartMain: React.FC = () => {
         }
         await stripe.redirectToCheckout({ sessionId });
       }
-      
+
       // Store total price in localStorage
-      localStorage.setItem('checkoutTotal', subtotal.toFixed(2));
+      localStorage.setItem("checkoutTotal", subtotal.toFixed(2));
 
       // Redirect to the checkout page
       navigate("/checkout");
@@ -187,7 +187,13 @@ const CartMain: React.FC = () => {
                 </div>
               ))
             ) : (
-              <p>Your cart is empty.</p>
+              <div className={style.EmptyCart}>
+                <h3>Your cart is empty</h3>
+                <p>Browse our products and add them to your cart!</p>
+                <button className={style.BtnGoToProducts} onClick={() => navigate("/products")}>
+                  Go to Products
+                </button>
+              </div>
             )}
           </div>
         </div>

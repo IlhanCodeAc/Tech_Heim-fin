@@ -236,3 +236,40 @@
         flex-direction: column;
     }
 }
+.EmptyCart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+  }
+  
+  .EmptyCart h3 {
+    font-size: 24px;
+    color: #0C0C0C;
+    font-weight: 500;
+  }
+  
+  .EmptyCart p {
+    font-size: 16px;
+    color: #717171; 
+  }
+  
+  .BtnGoToProducts {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0C68F4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .BtnGoToProducts:hover {
+    background-color: #0A56C3; 
+  }
+  

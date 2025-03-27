@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "../../components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import Burger from "../../../assets/SVGs/burger-menu-svgrepo-com.svg";
@@ -8,11 +8,12 @@ const ROUTES = [
   { path: "/", label: "Home" },
   { path: "/products", label: "Products" },
   { path: "user/:id/cart", label: "Cart" },
-  { path: "/settings", label: "Settings" },
+  { path: "/faq", label: "FAQ" },
 ];
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -28,47 +29,65 @@ export const Sidebar = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="flex">
-      {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white transition-transform ${
+        ref={sidebarRef}
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-gray-900 to-black text-white transition-transform duration-300 ease-in-out transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } z-50 shadow-lg`}
+        } z-50 shadow-2xl rounded-r-xl`}
       >
-        <div className="p-4 flex justify-between items-center border-b border-gray-700">
-          <span className="text-lg font-bold">Menu</span>
-          <Button onClick={toggleSidebar} variant="ghost">X</Button>
+        <div className="p-6 flex justify-between items-center border-b border-gray-700">
+          <span className="text-2xl font-semibold text-white">Menu</span>
+          <Button onClick={toggleSidebar} variant="ghost" className="text-white">
+            X
+          </Button>
         </div>
-        <nav className="mt-4">
-          <ul className="space-y-2">
+        <nav className="mt-6">
+          <ul className="space-y-4">
             {ROUTES.map(({ path, label }) => (
               <li key={path}>
                 <NavLink
                   to={path.replace(":id", "1")}
                   className={({ isActive }) =>
-                    `block px-4 py-2 transition-colors duration-300 ${
-                      isActive ? "bg-gray-700" : "hover:bg-gray-700"
+                    `block px-6 py-3 rounded-lg transition-colors duration-300 ${
+                      isActive ? "bg-gray-800" : "hover:bg-gray-800"
                     }`
                   }
                 >
-                  {label}
+                  <span className="text-lg font-medium">{label}</span>
                 </NavLink>
               </li>
             ))}
           </ul>
         </nav>
-        <div className="p-4 border-t border-gray-700">
-          <Button onClick={handleLogout} className="w-full bg-red-600 hover:bg-red-700 text-white">
+        <div className="p-6 mt-auto border-t border-gray-700">
+          <Button
+            onClick={handleLogout}
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg"
+          >
             Log Out
           </Button>
         </div>
       </div>
 
-      {/* Sidebar Toggle Button */}
       <main className="mt-4 ml-4">
-        <Button onClick={toggleSidebar} variant="ghost">
-          <img src={Burger} alt="Menu" className="w-6 h-6" />
+        <Button onClick={toggleSidebar} variant="ghost" className="text-gray-300">
+          <img src={Burger} alt="Menu" className="w-8 h-8" />
         </Button>
       </main>
     </div>
