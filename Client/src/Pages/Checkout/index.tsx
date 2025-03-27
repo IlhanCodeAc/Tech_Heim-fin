@@ -80,7 +80,7 @@ const CheckoutPage: React.FC = () => {
   }, []);
 
   const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+    const value = e.target.value.replace(/\D/g, "");
     let formattedValue = value;
 
     if (value.length > 2) {
@@ -130,7 +130,7 @@ const CheckoutPage: React.FC = () => {
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
-          window.location.href = "/";
+          window.location.href = "/success";
         });
       }
     } catch (error) {

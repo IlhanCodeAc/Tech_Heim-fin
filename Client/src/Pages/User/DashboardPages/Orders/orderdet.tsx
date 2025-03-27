@@ -4,8 +4,9 @@ import { toast } from "react-toastify";
 import orderService from "../../../../services/orders";
 
 const OrderDetailsPage: React.FC = () => {
-  const { orderId } = useParams<{ orderId: string }>();
-  const [order, setOrder] = useState<any | null>(null); // Adjusted to any for flexibility
+  const { id } = useParams<{ id: string }>();
+  const orderId = id;
+  const [order, setOrder] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,17 +14,21 @@ const OrderDetailsPage: React.FC = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await orderService.getOrderItems(orderId as string);
-        console.log(response); // Log the full response to check its structure
-
-        if (response.data && response.data.items) {
-          setOrder(response.data);
+        if (response.data.order) {
+          setOrder(response.data.order); 
         } else {
-          setError('No items found in this order');
+          setError("No order data found");
+          toast.error("No order data found");
+        }
+
+        if (!response.data.order.items || response.data.order.items.length === 0) {
+          setError("No items found in this order");
           toast.error("No items found in this order");
         }
       } catch (error) {
-        setError('Failed to fetch order details');
+        setError("Failed to fetch order details");
         toast.error("Failed to fetch order details");
+        console.error("Error fetching order details:", error);
       } finally {
         setLoading(false);
       }
@@ -60,23 +65,31 @@ const OrderDetailsPage: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Order Details</h1>
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center md:text-left">Order Details</h1>
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <div className="flex justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800">Order ID: {order._id}</h2>
-            <p className="text-sm text-gray-600">Status: 
-              <span className={`px-2 py-1 rounded-full text-white text-xs ${order.status === "pending" ? "bg-yellow-500" : order.status === "completed" ? "bg-green-500" : "bg-red-500"}`}>
+        <div className="flex flex-col md:flex-row justify-between mb-6">
+          <div className="mb-4 md:mb-0">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+              <span className="block md:inline-block md:mr-4 px-2 py-1">{`Order ID: ${order._id || "Not Available"}`}</span>
+            </h2>
+            <p className="text-sm text-gray-600 mb-2">
+              Status:
+              <span
+                className={`px-2 py-1 rounded-full ml-[2px] text-white text-xs ${
+                  order.status === "pending"
+                    ? "bg-yellow-500"
+                    : order.status === "completed"
+                    ? "bg-green-500"
+                    : "bg-red-500"
+                }`}
+              >
                 {order.status}
               </span>
             </p>
-            <p className="text-sm text-gray-600">Total: ${order.total}</p>
+            <p className="text-sm text-gray-600 mb-2">Total: ${order.total}</p>
             <p className="text-sm text-gray-600">Currency: {order.currency}</p>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800">Shipping Address</h3>
-            <p className="text-sm text-gray-600">{order.shippingAddress}</p>
-          </div>
+       
         </div>
 
         <h3 className="text-2xl font-semibold text-gray-800 mb-4">Items in this Order</h3>
@@ -93,16 +106,20 @@ const OrderDetailsPage: React.FC = () => {
             <tbody>
               {order.items && order.items.length > 0 ? (
                 order.items.map((item: any) => (
-                  <tr key={item.product._id} className="border-b hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-800">{item.product.name}</td>
+                  <tr key={item.productId} className="border-b hover:bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-800">{item.name || "Unknown Product"}</td>
                     <td className="px-6 py-4 text-sm text-gray-800">{item.quantity}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">${item.product.price}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">${item.quantity * item.product.price}</td>
+                    <td className="px-6 py-4 text-sm text-gray-800">${item.price ?? "N/A"}</td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      ${item.quantity * (item.price ?? 0)}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="text-center px-6 py-4 text-sm text-gray-800">No items found</td>
+                  <td colSpan={4} className="text-center px-6 py-4 text-sm text-gray-800">
+                    No items found
+                  </td>
                 </tr>
               )}
             </tbody>
