@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
@@ -35,30 +35,29 @@ const RegisterDialog = () => {
       return response;
     },
     onSuccess: () => {
+      setIsOpen(false); 
       Swal.fire({
         icon: 'success',
         title: 'Registration Successful',
         text: 'You have successfully registered!',
+        allowOutsideClick: false,
+      }).then(() => {
+        reset();
       });
-      reset(); 
-      setIsOpen(false); 
     },
     onError: (error: any) => {
-      if (error.response && error.response.data.message === "User already exists with this email") {
-        Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: 'A user with this email already exists.',
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: 'Something went wrong. Please try again.',
-        });
-      }
+      setIsOpen(false); 
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: error.response?.data.message || "Something went wrong. Please try again.",
+        allowOutsideClick: false,
+      }).then(() => {
+        setIsOpen(true);
+      });
     },
   });
+  
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

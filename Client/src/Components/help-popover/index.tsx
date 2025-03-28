@@ -106,15 +106,15 @@ export const HelpPopover = () => {
   };
 
   return (
-    <div id="help-popover" className="fixed bottom-4 right-4">
+    <div id="help-popover" className="fixed bottom-4 right-4 z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center justify-center text-sm font-medium border rounded-full w-16 h-16 bg-gray-700 hover:bg-gray-800"
+        className="inline-flex items-center justify-center text-sm font-medium border rounded-full w-16 h-16 bg-black hover:bg-gray-900"
       >
         <MessageCircle size={30} color="#fff" />
       </button>
       <RenderIf condition={isOpen}>
-        <div className="fixed bottom-[calc(4rem+1.5rem)] right-4 bg-white shadow-lg p-4 rounded-lg border w-[360px] h-[500px] flex flex-col">
+        <div className="fixed bottom-[calc(4rem+1.5rem)] right-4 bg-white shadow-lg p-4 rounded-lg border w-[360px] h-[500px] flex flex-col z-50">
           <h2 className="font-semibold text-lg text-blue-600">TechHeim Help Chat</h2>
           <p className="text-sm text-gray-500">Powered by PF401</p>
           <div ref={wrapperRef} className="flex-1 overflow-auto p-2 space-y-2 bg-gray-50 rounded-md">
@@ -128,7 +128,7 @@ export const HelpPopover = () => {
                   style={{
                     borderRadius: "20px",
                     padding: "10px 15px",
-                    backgroundColor: msg.userId === userId ? "#007bff" : "#f1f1f1", // blue for user and light gray for admin
+                    backgroundColor: msg.userId === userId ? "#007bff" : "#f1f1f1",
                     marginBottom: "10px",
                   }}
                 >

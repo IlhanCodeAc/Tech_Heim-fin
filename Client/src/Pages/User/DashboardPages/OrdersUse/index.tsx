@@ -1,7 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUserData } from "../../../../store/features/userSlice";
 import conversationService from "../../../../services/conversation";
 import { useSocket } from "../../../../Components/hooks/use-socket";
 import { cn } from "../../../../lib/utils";
@@ -27,7 +25,7 @@ const ChatPage = () => {
     queryKey: [QUERY_KEYS.ADMIN_CONVERSATIONS],
     queryFn: conversationService.getAll,
   });
-  
+
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const socket = useSocket();
@@ -69,7 +67,7 @@ const ChatPage = () => {
     const to = selectedConversation.userId;
     const from = user?._id;
     if (!to || !from) return;
-    
+
     inputRef.current!.value = "";
     socket.emit("message", { message, to, from });
     setMessages((prev) => [...prev, { text: message, userId: from, createdAt: new Date().toISOString() }]);
@@ -79,8 +77,8 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-60px)] bg-blue-50">
-      <div className="w-1/4 bg-white p-4 border-r overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100">
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-60px)] bg-blue-50">
+      <div className="w-full lg:w-1/4 bg-white p-4 border-b lg:border-r overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100">
         <h2 className="text-xl font-bold mb-4">Conversations</h2>
         {isLoading ? (
           <p>Loading...</p>
@@ -100,7 +98,7 @@ const ChatPage = () => {
         )}
       </div>
 
-      <div className="w-3/4 flex flex-col bg-blue-100 h-full">
+      <div className="w-full lg:w-3/4 flex flex-col bg-blue-100 h-full">
         <div className="p-4 bg-blue-500 text-white border-b">{selectedConversation?.userName || "Select a chat"}</div>
         <div ref={wrapperRef} className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100">
           {messages.map((message, idx) => (
@@ -118,7 +116,9 @@ const ChatPage = () => {
 
 const MessageItem = ({ message, owner }: { message: string; owner: boolean }) => {
   return (
-    <div className={cn("p-3 rounded-lg max-w-xs", owner ? "bg-blue-500 text-white self-end" : "bg-white text-black self-start")}>{message}</div>
+    <div className={cn("p-3 rounded-lg max-w-xs", owner ? "bg-blue-500 text-white self-end" : "bg-white text-black self-start")}>
+      {message}
+    </div>
   );
 };
 

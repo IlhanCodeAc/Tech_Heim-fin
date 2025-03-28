@@ -2,8 +2,8 @@ import React from 'react';
 
 const NotFound = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="text-center bg-white p-10 rounded-lg shadow-lg max-w-md w-full">
+    <div className="flex justify-center items-center min-h-screen ">
+      <div className="text-center bg-white rounded-lg  max-w-md w-full">
         <h1 className="text-6xl font-extrabold text-red-500">404</h1>
         <h2 className="text-2xl font-semibold text-gray-700 mt-4">Oops! Page Not Found</h2>
         <p className="text-lg text-gray-500 mt-4">

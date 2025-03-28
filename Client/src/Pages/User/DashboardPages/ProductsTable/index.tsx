@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import productService from "../../../../services/product";
@@ -14,13 +16,14 @@ const ProductTable: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); 
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await productService.getAll();
-        setProducts(response.data.items); 
+        console.log(response);
+        setProducts(response.data.items || []);
       } catch (err) {
         setError("Failed to fetch products.");
       } finally {
@@ -50,11 +53,20 @@ const ProductTable: React.FC = () => {
   };
 
   const openDialog = () => {
-    setIsDialogOpen(true); 
+    setIsDialogOpen(true);
   };
 
   const closeDialog = () => {
-    setIsDialogOpen(false); 
+    setIsDialogOpen(false);
+    const fetchProducts = async () => {
+      try {
+        const response = await productService.getAll();
+        setProducts(response.data.items || []);
+      } catch (err) {
+        setError("Failed to fetch products.");
+      }
+    };
+    fetchProducts();
   };
 
   if (loading) return <p>Loading products...</p>;
@@ -65,14 +77,12 @@ const ProductTable: React.FC = () => {
       <h2 className="text-xl font-bold mb-4">All Products</h2>
       <div className="w-full overflow-x-auto">
         <div className="flex justify-between mb-4">
-        <div className="flex justify-between mb-4">
- 
-  <ProductCreateDialog open={isDialogOpen} onClose={closeDialog} />
-</div>
-
+          <div className="flex justify-between mb-4">
+            <ProductCreateDialog open={isDialogOpen} onClose={closeDialog} />
+          </div>
         </div>
 
-        <table className="w-full border-collapse min-w-[600px] md:table hidden">
+        <table className="w-full border-collapse min-w-[600px] md:table">
           <thead>
             <tr className="bg-gray-200 text-left">
               <th className="p-3">Product</th>
@@ -152,7 +162,6 @@ const ProductTable: React.FC = () => {
           </div>
         </div>
       )}
- 
     </div>
   );
 };

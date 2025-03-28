@@ -18,7 +18,6 @@ const Wishlist: React.FC = () => {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Fetch wishlist data
   useEffect(() => {
     const fetchWishlist = async () => {
       try {

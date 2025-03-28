@@ -6,8 +6,8 @@ const SuccessPage = () => {
   const sessionId = searchParams.get("session_id");
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-8 max-w-md text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen  px-4">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md text-center">
         <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
         <h1 className="text-2xl font-bold text-gray-800 mt-4">Payment Successful!</h1>
         <p className="text-gray-600 mt-2">Thank you for your purchase. Your payment was processed successfully.</p>

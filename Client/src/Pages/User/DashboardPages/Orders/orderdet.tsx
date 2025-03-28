@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import orderService from "../../../../services/orders";
+import Newproducts from "../../../Home/Parts/New_Products";
 
 const OrderDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -126,6 +127,7 @@ const OrderDetailsPage: React.FC = () => {
           </table>
         </div>
       </div>
+      <Newproducts/>
     </div>
   );
 };

@@ -35,6 +35,7 @@ const Navbar = () => {
         text: "You need to be logged in to view your cart.",
         icon: "warning",
         confirmButtonText: "OK",
+        confirmButtonColor:"#0C68F4"
       });
     }
   };

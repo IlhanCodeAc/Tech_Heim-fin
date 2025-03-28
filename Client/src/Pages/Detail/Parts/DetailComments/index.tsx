@@ -6,8 +6,6 @@ import user from "../../../../assets/SVGs/user.svg";
 import { Star } from "lucide-react";
 import reviewService from "../../../../services/review";
 
-
-
 const Comments = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -34,7 +32,7 @@ const Comments = () => {
     console.log(id)
     try {
       await reviewService.create({
-        productId:id,
+        productId: id,
         content,
         rating,
       });
@@ -63,7 +61,7 @@ const Comments = () => {
         </div>
       </div>
       <div className={style.Right}>
-        <div className={style.Comments}>
+        <div className={style.Comments} style={{ maxHeight: "400px", overflowY: "auto" }}>
           {comments.map((comment) => (
             <div key={comment._id} className={style.Comment}>
               <div className={style.CommentTop}>
@@ -76,9 +74,7 @@ const Comments = () => {
                 </div>
                 <div className={style.CommentTopRight}>
                   <div className={style.Rating}>
-                    {[...Array(comment.rating)].map((_, i) => (
-                      <Star key={i} fill="white" />
-                    ))}
+                    <Star fill="white" /> <span>{comment.rating}</span>
                   </div>
                 </div>
               </div>

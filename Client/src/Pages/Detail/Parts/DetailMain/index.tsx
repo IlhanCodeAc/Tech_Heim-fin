@@ -60,8 +60,8 @@ const Detailmain: React.FC = () => {
       if (!isFavorite) {
         const response = await wishlistService.addToWishlist({ productId: product._id });
         console.log("Added to wishlist:", response.data);
-        Swal.fire("Success!", "Product added to wishlist!", "success");
-        setIsFavorite(true); // Set state AFTER successful API response
+        Swal.fire("Success!", "Product added to wishlist!", "success",);
+        setIsFavorite(true); 
       } else {
         const response = await wishlistService.removeFromWishlist({ productId: product._id });
         console.log("Removed from wishlist:", response.data);
@@ -171,14 +171,7 @@ const Detailmain: React.FC = () => {
               <p>Category</p>
               <h3>{product.category?.name || "N/A"}</h3>
             </div>
-            <div className={style.DetGray}>
-              <p>RAM</p>
-              <h3>{product.ram?.name || "N/A"}</h3>
-            </div>
-            <div className={style.DetWhite}>
-              <p>Display</p>
-              <h3>{product.display?.name || "N/A"}</h3>
-            </div>
+           
           </div>
         </div>
 

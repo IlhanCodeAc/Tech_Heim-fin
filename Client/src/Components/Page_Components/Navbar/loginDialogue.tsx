@@ -70,9 +70,10 @@ const LoginDialog = () => {
               </Button>
 
               <div className="text-center mt-2">
-                <Link to="/forgot-password" className="text-blue-500 hover:underline">
-                  Forgot password...
-                </Link>
+              <Link to="/forgot-password" className="text-blue-500 hover:underline" onClick={() => setIsOpen(false)}>
+              Forgot password...
+              </Link>
+
               </div>
 
               <Button type="button" className="bg-gray-500 text-white mt-2" onClick={() => setIsOpen(false)}>

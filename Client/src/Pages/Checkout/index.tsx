@@ -129,6 +129,7 @@ const CheckoutPage: React.FC = () => {
           text: "Your order has been placed successfully.",
           icon: "success",
           confirmButtonText: "OK",
+          confirmButtonColor:"#0C68F4"
         }).then(() => {
           window.location.href = "/success";
         });

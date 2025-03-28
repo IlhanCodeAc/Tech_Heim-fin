@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, User, MessageCircle, Package, Heart, Mail, LogOut } from "lucide-react";
 import style from "./style.module.css";
 import UserSVG from "../../../../assets/SVGs/user.svg";
-import UserTable from "../../DashboardPages/OrdersUse";
-import AdminTable from "../../DashboardPages/AdminOrders";
 import ProductTable from "../../DashboardPages/ProductsTable";
 import PersonalData from "../../DashboardPages/PersonalData";
 import Wishlist from "../../DashboardPages/Wishlist";

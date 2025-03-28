@@ -108,28 +108,54 @@ const CartMain: React.FC = () => {
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
 
   const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+      await swal.fire({
+        title: "Your cart is empty!",
+        text: "Please add items to your cart before proceeding to checkout.",
+        icon: "warning",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#0C68F4", // Blue button
+      });
+      return; 
+    }
+  
+    const result = await swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to proceed to checkout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, proceed",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#0C68F4", 
+      cancelButtonColor: "#d33", 
+    });
+  
+    if (!result.isConfirmed) {
+      return; 
+    }
+  
     try {
       console.log("Basket before checkout:", cartItems);
-
+  
       const itemsForCheckout = cartItems.map((item) => ({
         productId: item.productId,
         name: item.name,
         price: item.price ?? 0,
         quantity: item.quantity,
       }));
-
+  
       const response = await fetch(`http://localhost:3000/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: itemsForCheckout }),
       });
-
+  
       const data = await response.json();
       console.log("Response from API:", data);
-
+  
       const { sessionId } = data;
       const stripe = await getStripe();
-
+  
       if (stripe && sessionId) {
         try {
           await cartService.clearCart();
@@ -139,18 +165,17 @@ const CartMain: React.FC = () => {
         }
         await stripe.redirectToCheckout({ sessionId });
       }
-
-      // Store total price in localStorage
+  
       localStorage.setItem("checkoutTotal", subtotal.toFixed(2));
-
-      // Redirect to the checkout page
+  
       navigate("/checkout");
     } catch (error) {
       toast.error("Checkout error.");
       console.error(error);
     }
   };
-
+  
+  
   return (
     <div className="container">
       <div className={style.CartContainer}>
