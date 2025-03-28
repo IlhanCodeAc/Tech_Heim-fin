@@ -79,9 +79,9 @@ const forgotPassword = async (req: Request, res: Response) => {
     user.resetPasswordTokenExpires = new Date(Date.now() + 3600000);
     await user.save();
     transporter.sendMail({
-      from: '"Authentication 👻" <ilhanma@code.edu.az>', // sender address
-      to: email, // list of receivers
-      subject: "Reset Your Password", // Subject line
+      from: '"Authentication 👻" <ilhanma@code.edu.az>', 
+      to: email, 
+      subject: "Reset Your Password",
       html: `
         <h1>Reset Your Password</h1>
         <p>Click <a href="http://localhost:5173/reset-password/${token}">here</a> to reset your password</p>

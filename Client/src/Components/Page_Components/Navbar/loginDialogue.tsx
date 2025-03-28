@@ -5,7 +5,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import authService from "../../../services/auth";
-import { Link } from "react-router-dom"; // Import Link for routing
+import { Link } from "react-router-dom";
 
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -14,6 +14,7 @@ const loginValidationSchema = Yup.object({
 
 const LoginDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const mutation = useMutation({
     mutationFn: async (values: { email: string; password: string }) => {
@@ -22,13 +23,14 @@ const LoginDialog = () => {
     },
     onSuccess: (data) => {
       console.log("Login Successful:", data);
-      localStorage.setItem("user", JSON.stringify(data.user)); 
-      setIsOpen(false); 
-      window.location.reload(); 
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setIsOpen(false);
+      setErrorMessage("");
+      window.location.reload();
     },
-
     onError: (error: any) => {
       console.error("Login Failed:", error.response?.data || error.message);
+      setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
     },
   });
 
@@ -49,7 +51,7 @@ const LoginDialog = () => {
           validationSchema={loginValidationSchema}
           onSubmit={(values) => mutation.mutate(values)}
         >
-          {({ isSubmitting }) => (
+          {() => (
             <Form className="flex flex-col gap-2">
               <div>
                 <Field name="email" type="email" placeholder="Email" className="border p-2 rounded w-full" />
@@ -61,11 +63,12 @@ const LoginDialog = () => {
                 <ErrorMessage name="password" component="div" className="text-red-500" />
               </div>
 
-              <Button type="submit" className="bg-blue-500 text-white" disabled={isSubmitting || mutation.isPending}>
-                {mutation.isPending ? "Logging in..." : "Login"}
+              {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+
+              <Button type="submit" className="bg-blue-500 text-white">
+                Login
               </Button>
 
-              {/* Forgot Password Link */}
               <div className="text-center mt-2">
                 <Link to="/forgot-password" className="text-blue-500 hover:underline">
                   Forgot password...
