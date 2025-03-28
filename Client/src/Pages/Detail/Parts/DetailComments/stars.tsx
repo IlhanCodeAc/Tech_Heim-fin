@@ -11,8 +11,8 @@ export default function HalfRating({ setRating }: HalfRatingProps) {
     <Stack spacing={1}>
       <Rating
         name="full-rating"
-        defaultValue={3} // Default value can be adjusted
-        precision={1} // Only allows full stars
+        defaultValue={3} 
+        precision={1} 
         onChange={(_, newValue) => {
           setRating(newValue || 0);
         }}
