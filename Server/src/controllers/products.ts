@@ -88,7 +88,7 @@ const getAll = async (req: Request, res: Response) => {
       if (max_price) filter.price.$lte = parseFloat(max_price as string);
     }
 
-    console.log("🔎 Received Filters:", req.matchedData);
+    console.log("🔎 Received Filters:", graphicscard);
     console.log("✅ MongoDB Query Filter:", JSON.stringify(filter, null, 2));
 
     const items = await Product.find(filter)

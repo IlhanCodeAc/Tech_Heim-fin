@@ -125,30 +125,23 @@ export const HelpPopover = () => {
               >
                 <div
                   className={`p-3 rounded-lg max-w-[70%] ${msg.userId === userId ? "bg-blue-500 text-white" : "bg-gray-100 text-black self-start border border-gray-300"}`}
-                  style={{
-                    borderRadius: "20px",
-                    padding: "10px 15px",
-                    backgroundColor: msg.userId === userId ? "#007bff" : "#f1f1f1",
-                    marginBottom: "10px",
-                  }}
                 >
                   {msg.text}
                 </div>
               </div>
             ))}
           </div>
-          {isAdmin ? (
-            <div className="p-2 text-center text-gray-500">Admins can't type here</div>
+          {userId ? (
+            isAdmin ? (
+              <div className="p-2 text-center text-gray-500">Admins can't type here</div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex p-2 border-t bg-white">
+                <input ref={inputRef} type="text" placeholder="Type a message..." className="flex-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500" />
+                <button type="submit" className="ml-2 bg-blue-500 text-white p-2 rounded-md">Send</button>
+              </form>
+            )
           ) : (
-            <form onSubmit={handleSubmit} className="flex p-2 border-t bg-white">
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="Type a message..."
-                className="flex-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-              />
-              <button type="submit" className="ml-2 bg-blue-500 text-white p-2 rounded-md">Send</button>
-            </form>
+            <div className="p-2 text-center text-red-500">You have to be logged in to chat with admin</div>
           )}
         </div>
       </RenderIf>

@@ -142,5 +142,6 @@
     margin-bottom: 50px;
     @media screen and (max-width:767px) {
         flex-direction: column;
+        row-gap: 30px;
     }
 }

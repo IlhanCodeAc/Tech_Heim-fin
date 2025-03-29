@@ -19,7 +19,6 @@ interface User {
   email: string;
 }
 
-
 const cardDetailsSchema = z.object({
   cardNumber: z
     .string()
@@ -158,15 +157,17 @@ const CheckoutPage: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
           {cartItems.length > 0 ? (
-            cartItems.map((item) => (
-              <div key={item.productId} className="flex items-center justify-between mb-4">
-                <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
-                <div className="ml-4 flex-grow">
-                  <h3 className="font-medium">{item.name}</h3>
-                  <p className="text-gray-600">${(item.price || 0) * item.quantity}</p>
+            <div className="max-h-96 overflow-y-auto">
+              {cartItems.map((item) => (
+                <div key={item.productId} className="flex items-center justify-between mb-4">
+                  <img src={item.image} alt={item.name} className="w-20 h-20  rounded object-fit" />
+                  <div className="ml-4 flex-grow">
+                    <h3 className="font-medium">{item.name}</h3>
+                    <p className="text-gray-600">${(item.price || 0) * item.quantity}</p>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
             <p>Your cart is empty.</p>
           )}

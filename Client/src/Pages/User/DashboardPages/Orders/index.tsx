@@ -86,11 +86,11 @@ const OrdersPage: React.FC = () => {
       <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">Orders</h1>
 
       {/* Card-Based Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {orders.map((order) => (
           <div
             key={order._id}
-            className="bg-white shadow-lg rounded-lg p-6 cursor-pointer hover:bg-gray-50"
+            className="bg-white shadow-lg rounded-lg p-6 cursor-pointer hover:bg-gray-50 overflow-hidden max-w-xs w-full"
             onClick={() => handleOrderClick(order._id)}
           >
             <div className="flex justify-between items-center mb-4">
@@ -112,7 +112,7 @@ const OrdersPage: React.FC = () => {
             <p className="text-gray-500">Currency: {order.currency}</p>
 
             {user?.role === "admin" && (
-              <div className="mt-4 flex gap-4">
+              <div className="mt-4 flex flex-wrap gap-4">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();

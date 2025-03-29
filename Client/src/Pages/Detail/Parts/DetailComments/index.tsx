@@ -62,27 +62,33 @@ const Comments = () => {
       </div>
       <div className={style.Right}>
         <div className={style.Comments} style={{ maxHeight: "400px", overflowY: "auto" }}>
-          {comments.map((comment) => (
-            <div key={comment._id} className={style.Comment}>
-              <div className={style.CommentTop}>
-                <div className={style.CommentTopLeft}>
-                  <img src={user} alt="" className="w-[30px] h-[30px]" />
-                  <div className={style.CommentUser}>
-                    <h3>{comment.author?.name || "Anonymous"}</h3>
-                    <p>{new Date(comment.createdAt).toDateString()}</p>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment._id} className={style.Comment}>
+                <div className={style.CommentTop}>
+                  <div className={style.CommentTopLeft}>
+                    <img src={user} alt="" className="w-[30px] h-[30px]" />
+                    <div className={style.CommentUser}>
+                      <h3>{comment.author?.name || "Anonymous"}</h3>
+                      <p>{new Date(comment.createdAt).toDateString()}</p>
+                    </div>
+                  </div>
+                  <div className={style.CommentTopRight}>
+                    <div className={style.Rating}>
+                      <Star fill="white" /> <span>{comment.rating}</span>
+                    </div>
                   </div>
                 </div>
-                <div className={style.CommentTopRight}>
-                  <div className={style.Rating}>
-                    <Star fill="white" /> <span>{comment.rating}</span>
-                  </div>
+                <div className={style.CommentContent}>
+                  <p>{comment.content}</p>
                 </div>
               </div>
-              <div className={style.CommentContent}>
-                <p>{comment.content}</p>
-              </div>
+            ))
+          ) : (
+            <div className={style.NoComments}>
+              <p className="text-gray-500 text-center text-lg">There are no reveiws here yet</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>
